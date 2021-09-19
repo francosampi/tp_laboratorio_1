@@ -9,12 +9,10 @@
 #define FUNCIONES_H_
 #include <stdio.h>
 
-int ingresarDato(char letra);
-
-void calcularSuma(int _a, int _b, char* operacion);
-void calcularResta(int _a, int _b, char* operacion);
-void calcularDivision(int _a, int _b, char* operacion);
-void calcularProducto(int _a, int _b, char* operacion);
-int calcularFactorial(int _a);
+void calcularSuma(float _a, float _b, float *_operacion);
+void calcularResta(float _a, float _b, float *_operacion);
+int calcularDivision(float _a, float _b, float *_operacion);
+void calcularProducto(float _a, float _b, float *_operacion);
+long int calcularFactorial(int _num);
 
 #endif /* FUNCIONES_H_ */
