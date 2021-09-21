@@ -18,6 +18,7 @@ void ingresarDato(float *dato, char *_letra, int *_seHaIngresado, int *_sinCalcu
 void separador(void);
 void mostrarResultado(char *_operacion, float _resultado);
 int validarDatosAyB(int *_datoA, int *_datoB);
+int validarOpcion(char *_mensaje, char *_mensajeError, int _min, int _max);
 
 int main()
 {
@@ -49,7 +50,7 @@ void iniciarMenu()
 		mostrarInterfaz(&aIngresado, &bIngresado, a, b);
 
 		fflush(stdin);
-		scanf("%d", &opcion);
+		opcion=validarOpcion("Ingrese una opcion (1-5)", "Error. Ingrese una opcion valida (1-5)", 1, 5);
 
 		switch(opcion)
 		{
@@ -186,4 +187,21 @@ int validarDatosAyB(int *_datoA, int *_datoB)
 		return 0;
 	}
 	return 1;
+}
+
+int validarOpcion(char *_mensaje, char *_mensajeError, int _min, int _max)
+{
+	int opcionIngresada;
+
+	printf("%s", _mensaje);
+	fflush(stdin);
+	scanf("%d", &opcionIngresada);
+
+	while(opcionIngresada < _min || opcionIngresada > _max)
+	{
+		printf("%s", _mensajeError);
+		fflush(stdin);
+		scanf("%d", &opcionIngresada);
+	}
+	return opcionIngresada;
 }
