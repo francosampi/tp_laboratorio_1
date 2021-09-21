@@ -117,9 +117,7 @@ void iniciarMenu()
 					}
 					else
 					{
-						printf("\nLas operaciones no fueron realizadas previamente.");
-						separador();
-						system("pause");
+						printf("Las operaciones no fueron realizadas previamente.");
 					}
 				}
 			break;
@@ -138,7 +136,7 @@ void mostrarInterfaz(int *_datoAIngresado, int *_datoBIngresado, float _datoA, f
 	{
 		printf("1. Ingresar 1er operando (A=X)");
 	}
-	if(*_datoBIngresado)
+	if(*_datoBIngresado==1)
 	{
 		printf("\n2. Ingresar 2do operando (B=%.2f)", _datoB);
 	}
