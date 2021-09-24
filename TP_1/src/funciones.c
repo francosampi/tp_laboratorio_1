@@ -1,88 +1,188 @@
 /*
- * operaciones.c
+ * funciones.c
  *
- *  Created on: 3 sep. 2021
+ *  Created on: 24 sep. 2021
  *      Author: franc
  */
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "funciones.h"
+#include "operaciones.h"
 
-/**
- * @fn void calcularSuma(int, int, int*)
- * @brief Esta funcion realiza la operacion de la suma
- *
- * @param _a Primer numero flotante previamente ingresado
- * @param _b Segundo numero flotante previamente ingresado
- * @param _operacion En donde se guardara el resultado de la operacion
- */
-void calcularSuma(float _a, float _b, float *_operacion)
+void iniciarMenu()
 {
-	*_operacion = _a + _b;
-}
+	int opcion;
+	float a;
+	float b;
+	int aIngresado=0; //0-Sin ingresar, 1-Ingresado
+	int bIngresado=0; //0-Sin ingresar, 1-Ingresado
+	int calculosRealizados=0; //0-Sin resolver, 1-Resueltos (Al re-ingresar A o B vuelve a 0)
+	float resultadoSuma;
+	float resultadoResta;
+	float resultadoDivision;
+	float resultadoProducto;
+	int errorDivision;
+	long int resultadoFactorialA;
+	long int resultadoFactorialB;
 
-/**
- * @fn void calcularResta(float, float, float*)
- * @brief Esta funcion realiza la operacion de la resta
- *
- * @param _a Primer numero flotante previamente ingresado
- * @param _b Segundo numero flotante previamente ingresado
- * @param _operacion En donde se guardara el resultado de la operacion
- */
-void calcularResta(float _a, float _b, float *_operacion)
-{
-	*_operacion = _a - _b;
-}
-
-/**
- * @fn int calcularDivision(float, float, float*)
- * @brief Esta funcion realiza la operacion de la division (de ser posible) y a diferencia de las otras funciones, retorna su hubo o no un error
- *
- * @param _a Primer numero flotante previamente ingresado
- * @param _b Segundo numero flotante previamente ingresado
- * @param _operacion En donde se guardara el resultado de la operacion
- * @return De haber sido posible la operacion, se retorna el numero 1, caso contrario se retorna cero
- */
-int calcularDivision(float _a, float _b, float *_operacion)
-{
-	if(_b!=0)
+	do
 	{
-		*_operacion = _a / _b;
-		return 1;
-	}
-	return 0;
+		mostrarInterfaz(&aIngresado, &bIngresado, a, b);
+
+		fflush(stdin);
+		opcion=validarOpcion("Ingrese una opcion (1-5): ", "Error. Ingrese una opcion valida (1-5): ", 1, 5);
+
+		switch(opcion)
+		{
+			case 1:
+				ingresarDato(&a, "A", &aIngresado, &calculosRealizados);
+			break;
+			case 2:
+				ingresarDato(&b, "B", &bIngresado, &calculosRealizados);
+			break;
+			case 3:
+				if(validarDatosAyB(&aIngresado, &bIngresado)==1)
+				{
+					separador();
+					printf("Se calcularon todas las operaciones...");
+
+					calcularSuma(a, b, &resultadoSuma);
+					calcularResta(a, b, &resultadoResta);
+					errorDivision=calcularDivision(a, b, &resultadoDivision);
+					calcularProducto(a, b, &resultadoProducto);
+					resultadoFactorialA = calcularFactorial(a);
+					resultadoFactorialB = calcularFactorial(b);
+
+					calculosRealizados=1;
+				}
+			break;
+			case 4:
+				separador();
+				if(validarDatosAyB(&aIngresado, &bIngresado)==1)
+				{
+					if (calculosRealizados==1)
+					{
+						mostrarResultado("A+B", resultadoSuma);
+						mostrarResultado("A-B", resultadoResta);
+
+						if(errorDivision==0)
+						{
+							printf("No es posible dividir por cero\n");
+						}
+						else
+						{
+							mostrarResultado("A/B", resultadoDivision);
+						}
+
+						mostrarResultado("A*B", resultadoProducto);
+
+						if(a<0)
+						{
+							printf("No es posible realizar el factorial de A\n");
+						}
+						else
+						{
+							mostrarResultado("!A", (float) resultadoFactorialA);
+						}
+
+						if(b<0)
+						{
+							printf("No es posible realizar el factorial de B\n");
+						}
+						else
+						{
+							mostrarResultado("!B", (float) resultadoFactorialB);
+						}
+						separador();
+						system("pause");
+					}
+					else
+					{
+						printf("Las operaciones no fueron realizadas previamente.");
+					}
+				}
+			break;
+		}
+	}while(opcion!=5);
 }
 
-/**
- * @fn void calcularProducto(float, float, float*)
- * @brief Esta funcion realiza la operacion de la resta
- *
- * @param _a Primer numero flotante previamente ingresado
- * @param _b Segundo numero flotante previamente ingresado
- * @param _operacion En donde se guardara el resultado de la operacion
- */
-void calcularProducto(float _a, float _b, float *_operacion)
+void mostrarInterfaz(int *_datoAIngresado, int *_datoBIngresado, float _datoA, float _datoB)
 {
-	*_operacion = _a * _b;
-}
-
-/**
- * @fn long int calcularFactorial(int)
- * @brief Esta funcion realiza la operacion del factorial (si se trata de un numero positivo) y guardando el resultado a medida que se llama a si misma para resolver la operacion
- *
- * @param _num El numero al cual realizara el factorial
- * @return Luego de realizarse la operacion retornara el resultado final
- */
-long int calcularFactorial(int _num)
-{
-	long int resultado;
-
-	if(_num < 1)
+	separador();
+	if(*_datoAIngresado==1)
 	{
-		resultado = 1;
+		printf("1. Ingresar 1er operando (A=%.2f)", _datoA);
 	}
 	else
 	{
-		resultado = _num * calcularFactorial(_num-1);
+		printf("1. Ingresar 1er operando (A=X)");
 	}
-	return resultado;
+	if(*_datoBIngresado==1)
+	{
+		printf("\n2. Ingresar 2do operando (B=%.2f)", _datoB);
+	}
+	else
+	{
+		printf("\n2. Ingresar 2do operando (B=Y)");
+	}
+	printf("\n3. Calcular operaciones\n4. Mostrar resultados\n5. Salir");
+	separador();
+}
+
+void ingresarDato(float *dato, char *_letra, int *_seHaIngresado, int *_sinCalcular)
+{
+	float valorIngresado;
+
+	printf("Ingrese valor de %s: ", _letra);
+	fflush(stdin);
+	scanf("%f", &valorIngresado);
+
+	*dato = valorIngresado;
+	*_seHaIngresado=1;
+	*_sinCalcular=0;
+}
+
+void separador()
+{
+	printf("\n-----------------------\n");
+}
+
+void mostrarResultado(char *_operacion, float _resultado)
+{
+	printf("El resultado de %s es: %.2f\n", _operacion, _resultado);
+}
+
+int validarDatosAyB(int *_datoA, int *_datoB)
+{
+	if(*_datoA==0 || *_datoB==0)
+	{
+		if(*_datoA==0)
+		{
+			printf("No se ha ingresado el dato A previamente\n");
+		}
+		if(*_datoB==0)
+		{
+			printf("No se ha ingresado el dato B previamente");
+		}
+		return 0;
+	}
+	return 1;
+}
+
+int validarOpcion(char *_mensaje, char *_mensajeError, int _min, int _max)
+{
+	int opcionIngresada;
+
+	printf("%s", _mensaje);
+	fflush(stdin);
+	scanf("%d", &opcionIngresada);
+
+	while(opcionIngresada < _min || opcionIngresada > _max)
+	{
+		printf("%s", _mensajeError);
+		fflush(stdin);
+		scanf("%d", &opcionIngresada);
+	}
+	return opcionIngresada;
 }
