@@ -101,7 +101,7 @@ int removeEmployee(Employee* list, int len, int id)
 {
 	int index = findEmployeeById(list, len, id);
 
-	if (index!=-1)
+	if (list!=NULL && index!=-1)
 	{
 		printf("\nEmpleado a eliminar:\n\n%-5s %-20s %-20s %-20s %-5s\n", "ID", "Nombre", "Apellido", "Salario", "Sector");
 		printEmployee(&list[index]);
@@ -140,7 +140,7 @@ int sortEmployees(Employee* list, int len, int order)
 				flagSwap=0;
 				for(i=0; i<newLimit; i++)
 				{
-					if(strcmp(list[i].lastName, list[i+1].lastName)==1 || list[i].sector>list[i+1].sector)
+					if((list[i].isEmpty==1 && list[i+1].isEmpty==1) && (strcmp(list[i].lastName, list[i+1].lastName)==1 || list[i].sector>list[i+1].sector))
 					{
 						auxEmployee = list[i];
 						list[i] = list[i+1];
@@ -159,7 +159,7 @@ int sortEmployees(Employee* list, int len, int order)
 				flagSwap=0;
 				for(i=0; i<newLimit; i++)
 				{
-					if(strcmp(list[i].lastName, list[i+1].lastName)==-1 || list[i].sector<list[i+1].sector)
+					if((list[i].isEmpty==1 && list[i+1].isEmpty==1) && (strcmp(list[i].lastName, list[i+1].lastName)==-1 || list[i].sector<list[i+1].sector))
 					{
 						auxEmployee = list[i];
 						list[i] = list[i+1];

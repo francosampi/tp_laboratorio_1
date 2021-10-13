@@ -23,7 +23,13 @@ void printEmployee(Employee *emp);
 int salaryEmployees(Employee *list, int len, float *totalSalary, float *avgSalary, int employeeCounter);
 int printHighPaidEmployees(Employee *list, int len, float *avgSalary);
 
-void getString(char *_str, char *_msg, char *_errMsg, int _max);
+//VALIDATE STRING
+int getString(char *_str, char *_msg, char *_errMsg, int _strMaxLen);
+int isLetter(char *_str, char *_errMsg);
+int isNotBlank(char *_str, char *_errMsg);
+int getName(char *_str, char *_msg, char *_errMsgOnLen, char *_errMsgNotLetter, char *_errMsgIsBlank, int _strMaxLen);
+
+//VALIDATE NUMBER/VERIFY
 int getInt(char *_msg, char *_errMsg, int _min, int _max);
 float getFloat(char *_msg, char *_errMsg, int _min, int _max);
 int getCharacter(char *_character, char *_msg);

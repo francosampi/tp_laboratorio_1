@@ -6,6 +6,7 @@
  */
 #include "ArrayEmployees.h"
 #include "functions.h"
+#include <ctype.h>
 
 /**
  * @fn void menu()
@@ -229,7 +230,12 @@ int modifyEmployee(Employee* list, int len)
 				case 1:
 					printf("\nEmpleado a modificar:\n\n%-5s %-20s %-20s %-20s %-5s\n", "ID", "Nombre", "Apellido", "Salario", "Sector");
 					printEmployee(&auxEmployee);
-					getString(auxEmployee.name, "\nIngrese el nuevo nombre (50 caracteres): ", "Ingrese un nombre valido (50 caracteres): ", 51);
+					getName(auxEmployee.name,
+							"Ingrese nombre del empleado: ",
+							"El nombre no debe superar los 50 caracteres\n",
+							"El nombre no debe tener caracteres especiales\n",
+							"El nombre no puede estar vacío\n",
+							51);
 
 					printLine("");
 					printf("\nEmpleado luego de la modificación:\n\n%-5s %-20s %-20s %-20s %-5s\n", "ID", "Nombre", "Apellido", "Salario", "Sector");
@@ -246,7 +252,12 @@ int modifyEmployee(Employee* list, int len)
 				case 2:
 					printf("\nEmpleado a modificar:\n\n%-5s %-20s %-20s %-20s %-5s\n", "ID", "Nombre", "Apellido", "Salario", "Sector");
 					printEmployee(&auxEmployee);
-					getString(auxEmployee.lastName, "\nIngrese el nuevo apellido (50 caracteres): ", "Ingrese un apellido valido (50 caracteres): ", 51);
+					getName(auxEmployee.lastName,
+							"Ingrese apellido del empleado: ",
+							"El nombre no debe superar los 50 caracteres\n",
+							"El nombre no debe tener caracteres especiales\n",
+							"El nombre no puede estar vacío\n",
+							51);
 
 					printLine("");
 					printf("\nEmpleado luego de la modificación:\n\n%-5s %-20s %-20s %-20s %-5s\n", "ID", "Nombre", "Apellido", "Salario", "Sector");
@@ -263,7 +274,7 @@ int modifyEmployee(Employee* list, int len)
 				case 3:
 					printf("\nEmpleado a modificar:\n\n%-5s %-20s %-20s %-20s %-5s\n", "ID", "Nombre", "Apellido", "Salario", "Sector");
 					printEmployee(&auxEmployee);
-					auxEmployee.salary=getFloat("\nIngrese el nuevo salario: ", "Ingrese un salario valido: ", 1000, 999999);
+					auxEmployee.salary=getFloat("\nIngrese el nuevo salario (1000-999999): ", "Ingrese un salario valido (1000-999999): ", 1000, 999999);
 
 					printLine("");
 					printf("\nEmpleado luego de la modificación:\n\n%-5s %-20s %-20s %-20s %-5s\n", "ID", "Nombre", "Apellido", "Salario", "Sector");
@@ -337,9 +348,19 @@ void printLine(char *_msg)
  */
 void inputEmployeeData(char *nameProv, char *lastNameProv, float *salary, int *sector, int strLen)
 {
-	getString(nameProv, "Ingrese nombre del empleado (50 caracteres): ", "Error. Ingrese un nombre valido (50 caracteres): ", strLen);
-	getString(lastNameProv, "Ingrese apellido del empleado (50 caracteres): ", "Error. Ingrese un apellido valido (50 caracteres): ", strLen);
-	*salary=getFloat("Ingrese sueldo del empleado: ", "Error. Ingrese un sueldo valido: ", 1000, 999999);
+	getName(nameProv,
+			"Ingrese nombre del empleado: ",
+			"El nombre no debe superar los 50 caracteres\n",
+			"El nombre no debe tener caracteres especiales\n",
+			"El nombre no puede estar vacío\n",
+			strLen);
+	getName(lastNameProv,
+			"Ingrese apellido del empleado: ",
+			"El nombre no debe superar los 50 caracteres\n",
+			"El nombre no debe tener caracteres especiales\n",
+			"El nombre no puede estar vacío\n",
+			strLen);
+	*salary=getFloat("Ingrese sueldo del empleado (1000-999999): ", "Error. Ingrese un sueldo valido (1000-999999): ", 1000, 999999);
 	*sector=getInt("Ingrese sector del empleado (1-4): ", "Error. Ingrese sector valido (1-4): ", 1, 4);
 }
 
@@ -440,32 +461,123 @@ int printHighPaidEmployees(Employee* list, int len, float *avgSalary)
 }
 
 /**
- * @fn void getString(char*, char*, char*, int)
- * @brief this ask the user to enter an array of characters and validates it
+ * @fn int getString(char*, char*, char*, int)
+ * @brief
  *
- * @param _str where the array will be stored
+ * @param _str pointer to string
  * @param _msg the message that will show up
- * @param _errMsg the message that will show up if there was an error with the input
- * @param _max the limit of characters that the array can store
+ * @param _errMsg the message that will show up if the string is too long
+ * @param _strMaxLen length that the string cant surpass
+ * @return (-1) if error (character variable is null or if string too long) - (0) if ok
  */
-void getString(char *_str, char *_msg, char *_errMsg, int _max)
+int getString(char *_str, char *_msg, char *_errMsg, int _strMaxLen)
 {
 	char str[200];
 	int len;
 
-	printf("%s", _msg);
-	fflush(stdin);
-	scanf("%[^\n]", str);
-	len = strlen(str);
-
-	while(len > _max)
+	if(_str!=NULL)
 	{
-		printf("%s", _errMsg);
+		printf("%s", _msg);
 		fflush(stdin);
 		scanf("%[^\n]", str);
 		len = strlen(str);
+
+		if(len>_strMaxLen)
+		{
+			printf(_errMsg);
+			return -1;
+		}
+		strcpy(_str, str);
+		return 0;
 	}
-	strcpy(_str, str);
+	return -1;
+}
+
+/**
+ * @fn int isLetter(char*, char*)
+ * @brief this validates if a string has only letters as characters
+ *
+ * @param _str pointer to string
+ * @param _errMsg the message that will show up if the string has special characters
+ * @return (-1) if error (character variable is null or if there is a special character on string) - (0) if ok
+ */
+int isLetter(char *_str, char *_errMsg)
+{
+    int i=0;
+
+    if(_str!=NULL)
+    {
+		while(_str[i]!='\0')
+		{
+			if((_str[i]!=' ') && (_str[i]<'a'||_str[i]>'z') && (_str[i]<'A'||_str[i]>'Z'))
+			{
+				printf("%s", _errMsg);
+				return -1;
+			}
+			i++;
+		}
+    }
+    return 0;
+}
+
+/**
+ * @fn int isNotBlank(char*, char*)
+ * @brief this validates if a string has characters and is not blank
+ *
+ * @param _str pointer to string
+ * @param _errMsg the message that will show up if the string is empty
+ * @return (-1) if error (character variable is null or string is empty) - (0) if ok
+ */
+int isNotBlank(char *_str, char *_errMsg)
+{
+	int flagNotBlank=0;
+    int i=0;
+
+    if(_str!=NULL)
+    {
+        while(_str[i]!='\0')
+        {
+            if(_str[i]!=' ')
+            {
+            	flagNotBlank=1;
+            }
+            i++;
+        }
+        if (flagNotBlank==1)
+        {
+        	return 0;
+        }
+    }
+    printf("%s", _errMsg);
+    return -1;
+}
+
+/**
+ * @fn int getName(char*, char*, char*, char*, char*, int)
+ * @brief this will get a string and validates if it has correct length, is not empty and it has only letters
+ *
+ * @param _str pointer to string
+ * @param _msg the message that will show up
+ * @param _errMsgOnLen the message that will show up if there was an error with the length
+ * @param _errMsgNotLetter the message that will show up if there was an error with the characters
+ * @param _errMsgIsBlank the message that will show up if there was an empty string
+ * @param _strMaxLen the maximum length of the string
+ * @return (-1) if error (character variable is null or something is wrongly validated) - (0) if ok
+ */
+int getName(char *_str, char *_msg, char *_errMsgOnLen, char *_errMsgNotLetter, char *_errMsgIsBlank, int _strMaxLen)
+{
+	char str[_strMaxLen];
+
+	if(_str!=NULL)
+	{
+		if(getString(str, _msg, _errMsgOnLen, _strMaxLen)==0 && isLetter(str, _errMsgNotLetter)==0 && isNotBlank(str, _errMsgIsBlank)==0)
+		{
+			strcpy(_str, str);
+			return 0;
+		}
+	}
+	getName(_str, _msg, _errMsgOnLen, _errMsgNotLetter, _errMsgIsBlank, _strMaxLen);
+	return -1;
 }
 
 /**
@@ -473,10 +585,10 @@ void getString(char *_str, char *_msg, char *_errMsg, int _max)
  * @brief this ask the user to enter an int number and validates it
  *
  * @param _msg the message that will show up
- * @param _errMsg the message that will show up if there was an error with the input
+ * @param _errMsg the message that will show up if there was an error with the input (< min or > max)
  * @param _min the minimum possible number
  * @param _max the maximum possible number
- * @return returns the number entered
+ * @return returns the int number entered
  */
 int getInt(char *_msg, char *_errMsg, int _min, int _max)
 {
@@ -486,7 +598,7 @@ int getInt(char *_msg, char *_errMsg, int _min, int _max)
 	fflush(stdin);
 	scanf("%d", &num);
 
-	while(num < _min || num > _max)
+	while(isdigit(num)==0 && (num < _min || num > _max))
 	{
 		printf("%s", _errMsg);
 		fflush(stdin);
@@ -503,7 +615,7 @@ int getInt(char *_msg, char *_errMsg, int _min, int _max)
  * @param _errMsg the message that will show up if there was an error with the input
  * @param _min the minimum possible number
  * @param _max the maximum possible number
- * @return returns the number entered
+ * @return returns the float number entered
  */
 float getFloat(char *_msg, char *_errMsg, int _min, int _max)
 {
