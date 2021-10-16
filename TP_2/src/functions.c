@@ -49,34 +49,37 @@ void menu()
 
 					if(addEmployee(Employees, EMPSIZE, id, nameProv, lastNameProv, salaryProv, sectorProv)==0)
 					{
-						printf("\nEmpleado agregado con exito...");
+						printf("\nEmpleado agregado con exito...\n");
 						employeesCounter++;
 						id++;
 						lastIdEntered=id;
 					}
 					else
 					{
-						printf("\nNo se pudo cargar el empleado");
+						printf("\nNo se pudo cargar el empleado\n");
 					}
 				}
 				else
 				{
-					printf("\nEspacio lleno. No se pudo cargar el empleado");
+					printf("\nEspacio lleno. No se pudo cargar el empleado\n");
 				}
+				system("pause");
 			break;
 			case 2:
 				if (employeesCounter>0)
 				{
 					printLine("MODIFICAR EMPLEADO");
+					printEmployees(Employees, EMPSIZE);
 					if(modifyEmployee(Employees, EMPSIZE)==-1)
 					{
-						printf("\nEl empleado no fue encontrado bajo esa ID");
+						printf("\nEl empleado no fue encontrado bajo esa ID\n");
 					}
 				}
 				else
 				{
-					printf("\nNo hay empleados para modificar...");
+					printf("\nNo hay empleados para modificar...\n");
 				}
+				system("pause");
 			break;
 			case 3:
 				if (employeesCounter>0)
@@ -84,21 +87,23 @@ void menu()
 					int idProv;
 
 					printLine("REMOVER EMPLEADO");
-					idProv=getInt("Ingrese ID del empleado a eliminar: ", "Error. Ingrese un ID valido: ", 0, EMPSIZE);
+					printEmployees(Employees, EMPSIZE);
+					idProv=getInt("\nIngrese ID del empleado a eliminar: ", "Error. Ingrese un ID valido: ", 0, EMPSIZE);
 					if(removeEmployee(Employees, EMPSIZE, idProv)==0)
 					{
 						employeesCounter--;
-						printf("\nEmpleado eliminado con exito...");
+						printf("\nEmpleado eliminado con exito...\n");
 					}
 					else
 					{
-						printf("\nEl empleado no fue encontrado bajo esa ID");
+						printf("\nEl empleado no fue encontrado bajo esa ID\n");
 					}
 				}
 				else
 				{
-					printf("\nNo hay empleados para remover...");
+					printf("\nNo hay empleados para remover...\n");
 				}
+				system("pause");
 			break;
 			case 4:
 				if (employeesCounter>0)
@@ -107,14 +112,15 @@ void menu()
 				}
 				else
 				{
-					printf("\nNo hay empleados para mostrar...");
+					printf("\nNo hay empleados para mostrar...\n");
 				}
+				system("pause");
 			break;
 			case 5:
 				printLine("");
 				if(verify("Desea salir del programa? ('s'): ")==0)
 				{
-					printf("\nNos vemos! vuelva pronto...");
+					printf("\nNos vemos! vuelva pronto...\n");
 				}
 				else
 				{
@@ -176,14 +182,14 @@ void printEmployeeDataMenu(Employee* list, int len, int *employeesCounter)
 				}
 				else
 				{
-					printf("\nNo hay empleados para calcular el salario promedio...");
+					printf("\nNo hay empleados para calcular el salario promedio...\n");
 				}
 			break;
 			case 4:
 				printLine("");
 				if(verify("Desea regresar al menú principal? ('s'): ")==0)
 				{
-					printf("\nRegresando al menú principal...");
+					printf("\nRegresando al menú principal...\n");
 				}
 				else
 				{
@@ -309,7 +315,7 @@ int modifyEmployee(Employee* list, int len)
 					printLine("");
 					if(verify("Desea regresar al menú principal? ('s'): ")==0)
 					{
-						printf("\nRegresando al menú principal...");
+						printf("\nRegresando al menú principal...\n");
 					}
 					else
 					{
@@ -322,17 +328,6 @@ int modifyEmployee(Employee* list, int len)
 		return 0;
 	}
 	return -1;
-}
-
-/**
- * @fn void printLine(char*)
- * @brief This shows a separator with a message (or not)
- *
- * @param _msg the message that will be in the middle of the separator
- */
-void printLine(char *_msg)
-{
-	printf("\n----------------%s----------------\n", _msg);
 }
 
 /**
@@ -593,16 +588,17 @@ int getName(char *_str, char *_msg, char *_errMsgOnLen, char *_errMsgNotLetter, 
 int getInt(char *_msg, char *_errMsg, int _min, int _max)
 {
 	int num;
+	int resOperation;
 
 	printf("%s", _msg);
 	fflush(stdin);
-	scanf("%d", &num);
+	resOperation=scanf("%d", &num);
 
-	while(isdigit(num)==0 && (num < _min || num > _max))
+	while(resOperation!=1 || (num < _min || num > _max))
 	{
 		printf("%s", _errMsg);
 		fflush(stdin);
-		scanf("%d", &num);
+		resOperation=scanf("%d", &num);
 	}
 	return num;
 }
@@ -620,16 +616,17 @@ int getInt(char *_msg, char *_errMsg, int _min, int _max)
 float getFloat(char *_msg, char *_errMsg, int _min, int _max)
 {
 	float num;
+	int resOperation;
 
 	printf("%s", _msg);
 	fflush(stdin);
-	scanf("%f", &num);
+	resOperation=scanf("%f", &num);
 
-	while(num < _min || num > _max)
+	while(resOperation!=1 || (num < _min || num > _max))
 	{
 		printf("%s", _errMsg);
 		fflush(stdin);
-		scanf("%f", &num);
+		resOperation=scanf("%f", &num);
 	}
 	return num;
 }
@@ -671,4 +668,15 @@ int verify(char *_msg)
 		return 0;
 	}
 	return -1;
+}
+
+/**
+ * @fn void printLine(char*)
+ * @brief This shows a separator with a message (or not)
+ *
+ * @param _msg the message that will be in the middle of the separator
+ */
+void printLine(char *_msg)
+{
+	printf("\n----------------%s----------------\n", _msg);
 }

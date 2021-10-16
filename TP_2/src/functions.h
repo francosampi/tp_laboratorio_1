@@ -13,7 +13,6 @@
 #include <string.h>
 
 void menu();
-void printLine(char *_msg);
 
 void inputEmployeeData(char *nameProv, char *lastNameProv, float *salary, int *sector, int strLen);
 int searchAvaliableSpace(Employee *list, int len);
@@ -34,5 +33,7 @@ int getInt(char *_msg, char *_errMsg, int _min, int _max);
 float getFloat(char *_msg, char *_errMsg, int _min, int _max);
 int getCharacter(char *_character, char *_msg);
 int verify(char *_msg);
+
+void printLine(char *_msg);
 
 #endif /* FUNCTIONS_H_ */

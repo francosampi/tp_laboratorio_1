@@ -127,48 +127,63 @@ indicate UP or DOWN order
 int sortEmployees(Employee* list, int len, int order)
 {
 	Employee auxEmployee;
-	int i;
-	int newLimit;
-	int flagSwap;
 
 	if(list!=NULL && len>-1)
 	{
 		if(order==1)
 		{
-			newLimit=len-1;
-			do{
-				flagSwap=0;
-				for(i=0; i<newLimit; i++)
+			for(int i=0; i<len-1; i++)
+			{
+				for(int j=i+1; j<len; j++)
 				{
-					if((list[i].isEmpty==1 && list[i+1].isEmpty==1) && (strcmp(list[i].lastName, list[i+1].lastName)==1 || list[i].sector>list[i+1].sector))
+					if(list[i].isEmpty==0 && list[j].isEmpty==0)
 					{
-						auxEmployee = list[i];
-						list[i] = list[i+1];
-						list[i+1] = auxEmployee;
-						flagSwap = 1;
+						if(strcmp(list[i].lastName, list[j].lastName)==1)
+						{
+							auxEmployee = list[i];
+							list[i] = list[j];
+							list[j] = auxEmployee;
+						}
+						else
+						{
+							if(strcmp(list[i].lastName, list[j].lastName)==0 && list[i].sector>list[j].sector)
+							{
+								auxEmployee = list[i];
+								list[i] = list[j];
+								list[j] = auxEmployee;
+							}
+						}
 					}
 				}
-				newLimit--;
-			}while(flagSwap);
+			}
 			printf("Lista ordenada por apellido de manera ascendente...\n");
 		}
 		else if(order==2)
 		{
-			newLimit=len-1;
-			do{
-				flagSwap=0;
-				for(i=0; i<newLimit; i++)
+			for(int i=0; i<len-1; i++)
+			{
+				for(int j=i+1; j<len; j++)
 				{
-					if((list[i].isEmpty==1 && list[i+1].isEmpty==1) && (strcmp(list[i].lastName, list[i+1].lastName)==-1 || list[i].sector<list[i+1].sector))
+					if(list[i].isEmpty==0 && list[j].isEmpty==0)
 					{
-						auxEmployee = list[i];
-						list[i] = list[i+1];
-						list[i+1] = auxEmployee;
-						flagSwap = 1;
+						if(strcmp(list[i].lastName, list[j].lastName)==-1)
+						{
+							auxEmployee = list[i];
+							list[i] = list[j];
+							list[j] = auxEmployee;
+						}
+						else
+						{
+							if(strcmp(list[i].lastName, list[j].lastName)==0 && list[i].sector<list[j].sector)
+							{
+								auxEmployee = list[i];
+								list[i] = list[j];
+								list[j] = auxEmployee;
+							}
+						}
 					}
 				}
-				newLimit--;
-			}while(flagSwap);
+			}
 			printf("Lista ordenada por apellido de manera descendente...\n");
 		}
 		return 0;
