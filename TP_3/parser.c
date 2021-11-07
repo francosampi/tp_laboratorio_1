@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "LinkedList.h"
 #include "Employee.h"
+#include "Controller.h"
 
 /** \brief Parsea los datos los datos de los empleados desde el archivo data.csv (modo texto).
  *
@@ -29,10 +30,14 @@ int parser_EmployeeFromText(FILE* pFile , LinkedList* pArrayListEmployee)
 			}
 			Employee* employee = employee_newParametros(id, nombre, horasTrabajadas, sueldo);
 			ll_add(pArrayListEmployee, employee);
-			printf("%s - %s, %s, %s", id, nombre, horasTrabajadas, sueldo);
 		}
 		fclose(pFile);
 		pFile=NULL;
+
+		if(controller_ListEmployee(pArrayListEmployee)==1)
+		{
+			printf("\nError al cargar la lista...");
+		}
 		return 0;
 	}
     return 1;
@@ -47,14 +52,16 @@ int parser_EmployeeFromText(FILE* pFile , LinkedList* pArrayListEmployee)
  */
 int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 {
-	Employee *pEmployee=NULL;
-
 	if(pFile!=NULL && pArrayListEmployee!=NULL)
 	{
 		while(!feof(pFile))
 		{
-			pEmployee=employee_new();
+			Employee *pEmployee=employee_new();
 			fread(pEmployee, sizeof(Employee), 1, pFile);
+			if(feof(pFile))
+			{
+				break;
+			}
 		}
 		fclose(pFile);
 		pFile=NULL;

@@ -106,13 +106,20 @@ int main()
             case 4:
             	if(flagListaCargada==1)
             	{
-            		if(controller_editEmployee(listaEmpleados)==0)
-            		{
-            			printf("\nSe ha modificado al empleado exitosamente...\n");
-            		}
-            		else
+					if(controller_ListEmployee(listaEmpleados)==0)
 					{
-						printf("\nError al abrir menu de modificacion...\n");
+						if(controller_editEmployee(listaEmpleados)==0)
+						{
+							printf("\nSe ha modificado al empleado exitosamente...\n");
+						}
+						else
+						{
+							printf("\nError al abrir menu de modificacion...\n");
+						}
+					}
+					else
+					{
+						printf("\nError al cargar la lista...");
 					}
             	}
             	else
@@ -121,13 +128,52 @@ int main()
             	}
                 system("pause");
                 break;
+            case 5:
+				if(flagListaCargada==1)
+				{
+					if(controller_ListEmployee(listaEmpleados)==0)
+					{
+						if(controller_removeEmployee(listaEmpleados)==0)
+						{
+							printf("\nSe ha dado de baja al empleado exitosamente...\n");
+						}
+						else
+						{
+							printf("\nError al abrir menu de bajas...\n");
+						}
+					}
+					else
+					{
+						printf("\nError al cargar la lista...");
+					}
+				}
+				else
+				{
+					printf("\nLa lista de empleados no fue cargada previamente...\n");
+				}
+				system("pause");
+				break;
+            case 6:
+				if(flagListaCargada==1)
+				{
+					if(controller_ListEmployee(listaEmpleados)==1)
+					{
+						printf("\nError al cargar la lista...");
+					}
+				}
+				else
+				{
+					printf("\nLa lista de empleados no fue cargada previamente...\n");
+				}
+				system("pause");
+				break;
             case 10:
             	if(verify("\nDesea salir del programa? ('s'): ")==0)
             	{
             		printf("\nSaliendo del programa...\n");
             	}
+            	break;
         }
     }while(opcion != 10);
     return 0;
 }
-

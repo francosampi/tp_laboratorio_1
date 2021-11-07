@@ -3,6 +3,7 @@
 #include "LinkedList.h"
 #include "Employee.h"
 #include "parser.h"
+#include "functions.h"
 #include "inputs.h"
 
 /** \brief Carga los datos de los empleados desde el archivo data.csv (modo texto).
@@ -100,88 +101,84 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
 {
 	if(pArrayListEmployee!=NULL)
 	{
-		Employee *empleadoAModificar=NULL;
-		Employee *auxEmpleado=employee_new();
-
 		int lltam=ll_len(pArrayListEmployee);
 		int opcion=getInt("Ingrese ID del empleado a modificar: ", "Error. Ingrese ID del empleado a modificar: ", 0, lltam);
 
-		//GET INDEX POR ID
-		for(int i=0; i<lltam; i++)
-		{
-			empleadoAModificar=ll_get(pArrayListEmployee, i);
-			if(empleadoAModificar->id==opcion)
-			{
-				auxEmpleado=empleadoAModificar;
-				opcion=0;
-				break;
-			}
-		}
-		printf("\nEmpleado a modiifcar:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
-		printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
-		printLine("");
+		Employee *empleadoAModificar=NULL;
+		empleadoAModificar=employee_getById(pArrayListEmployee, lltam, opcion);
 
-		//MODIFICAR
-		do
+		Employee *auxEmpleado=NULL;
+		auxEmpleado=employee_new();
+
+		if(empleadoAModificar!=NULL || auxEmpleado!=NULL)
 		{
-			printf("\nEmpleado a modificar:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
+			auxEmpleado=empleadoAModificar;
+
+			printf("\nEmpleado a modiifcar:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
 			printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
 			printLine("");
-			printf("1. Modificar nombre\n2. Modificar horas trabajadas\n3. Modificar sueldo\n4. Salir");
-			printLine("");
-			opcion=getInt("\nIngrese una opcion (1-4): ", "\nError. Ingrese una opcion (1-4): ", 1, 4);
-			switch(opcion)
+
+			do
 			{
-				case 1:
-					getName(auxEmpleado->nombre, "Ingrese nombre de empleado: ",
-						"El nombre es muy largo...\n",
-						"El nombre no puede contener caracteres especiales...\n",
-						"El nombre no puede estar en blanco...\n",
-						128);
-					printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
-					printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
-					printLine("");
-					if(verify("Confirmar cambios? ('s'): ")==0)
-					{
-						empleadoAModificar=auxEmpleado;
-					}
-				break;
-				case 2:
-					auxEmpleado->horasTrabajadas=getInt("Ingrese horas trabajadas: ", "Error. Ingrese horas trabajadas: ", 0, 99999);
-					printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
-					printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
-					printLine("");
-					if(verify("Confirmar cambios? ('s'): ")==0)
-					{
-						empleadoAModificar=auxEmpleado;
-					}
-				break;
-				case 3:
-					auxEmpleado->sueldo=getInt("Ingrese sueldo: ", "Error. Ingrese sueldo: ", 20000, 999999);
-					printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
-					printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
-					printLine("");
-					if(verify("Confirmar cambios? ('s'): ")==0)
-					{
-						empleadoAModificar=auxEmpleado;
-					}
-				break;
-				case 4:
-					printLine("");
-					if(verify("Salir al menu principal? ('s'): ")==0)
-					{
-						printf("\nRegresando al menu principal...\n");
-					}
-					else
-					{
-						opcion=0;
-					}
-				break;
-			}
-		}while(opcion!=4);
-		free(auxEmpleado);
-		auxEmpleado=NULL;
-		return 0;
+				printf("\nEmpleado a modificar:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
+				printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
+				printLine("");
+				printf("1. Modificar nombre\n2. Modificar horas trabajadas\n3. Modificar sueldo\n4. Salir");
+				printLine("");
+				opcion=getInt("\nIngrese una opcion (1-4): ", "\nError. Ingrese una opcion (1-4): ", 1, 4);
+				switch(opcion)
+				{
+					case 1:
+						getName(auxEmpleado->nombre, "Ingrese nombre de empleado: ",
+							"El nombre es muy largo...\n",
+							"El nombre no puede contener caracteres especiales...\n",
+							"El nombre no puede estar en blanco...\n",
+							128);
+						printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
+						printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
+						printLine("");
+						if(verify("Confirmar cambios? ('s'): ")==0)
+						{
+							empleadoAModificar=auxEmpleado;
+						}
+					break;
+					case 2:
+						auxEmpleado->horasTrabajadas=getInt("Ingrese horas trabajadas: ", "Error. Ingrese horas trabajadas: ", 0, 99999);
+						printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
+						printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
+						printLine("");
+						if(verify("Confirmar cambios? ('s'): ")==0)
+						{
+							empleadoAModificar=auxEmpleado;
+						}
+					break;
+					case 3:
+						auxEmpleado->sueldo=getInt("Ingrese sueldo: ", "Error. Ingrese sueldo: ", 20000, 999999);
+						printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
+						printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
+						printLine("");
+						if(verify("Confirmar cambios? ('s'): ")==0)
+						{
+							empleadoAModificar=auxEmpleado;
+						}
+					break;
+					case 4:
+						printLine("");
+						if(verify("Salir al menu principal? ('s'): ")==0)
+						{
+							printf("\nRegresando al menu principal...\n");
+						}
+						else
+						{
+							opcion=0;
+						}
+					break;
+				}
+			}while(opcion!=4);
+			free(auxEmpleado);
+			auxEmpleado=NULL;
+			return 0;
+		}
 	}
     return 1;
 }
@@ -195,6 +192,25 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_removeEmployee(LinkedList* pArrayListEmployee)
 {
+	if(pArrayListEmployee!=NULL)
+	{
+		int lltam=ll_len(pArrayListEmployee);
+		int opcion=getInt("Ingrese ID del empleado a remover: ", "Error. Ingrese ID del empleado a remover: ", 0, lltam);
+		int index;
+
+		Employee *empleadoABorrar=NULL;
+		empleadoABorrar=employee_getById(pArrayListEmployee, lltam, opcion);
+		index=ll_indexOf(pArrayListEmployee, empleadoABorrar);
+
+		printf("\nEmpleado a remover:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
+		printf("%-5d %-20s %-20d %-20d\n", empleadoABorrar->id, empleadoABorrar->nombre, empleadoABorrar->horasTrabajadas, empleadoABorrar->sueldo);
+		printLine("");
+		if(verify("Confirmar baja? ('s'): ")==0)
+		{
+			ll_remove(pArrayListEmployee, index);
+			return 0;
+		}
+	}
     return 1;
 }
 
@@ -207,6 +223,24 @@ int controller_removeEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_ListEmployee(LinkedList* pArrayListEmployee)
 {
+	if(pArrayListEmployee!=NULL)
+	{
+		int lltam=ll_len(pArrayListEmployee);
+
+		printLine("LISTA DE EMPLEADOS");
+		printf("\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
+		printLine("");
+		for(int i=0; i<lltam; i++)
+		{
+			Employee *empleado=ll_get(pArrayListEmployee, i);
+			if(empleado!=NULL)
+			{
+				printf("%-5d %-20s %-20d %-20d\n", empleado->id, empleado->nombre, empleado->horasTrabajadas, empleado->sueldo);
+			}
+		}
+		printLine("");
+		return 0;
+	}
     return 1;
 }
 
