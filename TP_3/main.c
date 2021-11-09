@@ -69,7 +69,7 @@ int main()
             case 2:
             	if(flagListaCargada==0)
             	{
-                    if(controller_loadFromBinary("data.csv",listaEmpleados)==0)
+                    if(controller_loadFromBinary("datab.csv",listaEmpleados)==0)
                     {
                     	printf("\nSe han cargado los datos exitosamente...\n");
                     	flagListaCargada=1;
@@ -108,18 +108,14 @@ int main()
             	{
 					if(controller_ListEmployee(listaEmpleados)==0)
 					{
-						if(controller_editEmployee(listaEmpleados)==0)
-						{
-							printf("\nSe ha modificado al empleado exitosamente...\n");
-						}
-						else
+						if(controller_editEmployee(listaEmpleados)==1)
 						{
 							printf("\nError al abrir menu de modificacion...\n");
 						}
 					}
 					else
 					{
-						printf("\nError al cargar la lista...");
+						printf("\nError al cargar la lista...\n");
 					}
             	}
             	else
@@ -158,7 +154,43 @@ int main()
 				{
 					if(controller_ListEmployee(listaEmpleados)==1)
 					{
-						printf("\nError al cargar la lista...");
+						printf("\nError al cargar la lista...\n");
+					}
+				}
+				else
+				{
+					printf("\nLa lista de empleados no fue cargada previamente...\n");
+				}
+				system("pause");
+				break;
+            case 8:
+				if(flagListaCargada==1)
+				{
+					if(controller_saveAsText("dataPrueba.csv", listaEmpleados)==0)
+					{
+						printf("\nLa lista fue guardada en texto exitosamente...\n");
+					}
+					else
+					{
+						printf("\nError al guardar la lista en texto...\n");
+					}
+				}
+				else
+				{
+					printf("\nLa lista de empleados no fue cargada previamente...\n");
+				}
+				system("pause");
+				break;
+            case 9:
+				if(flagListaCargada==1)
+				{
+					if(controller_saveAsBinary("dataPrueba.csv", listaEmpleados)==0)
+					{
+						printf("\nLa lista fue guardada en texto exitosamente...\n");
+					}
+					else
+					{
+						printf("\nError al guardar la lista en texto...\n");
 					}
 				}
 				else

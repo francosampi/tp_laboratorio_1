@@ -54,17 +54,31 @@ int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 {
 	if(pFile!=NULL && pArrayListEmployee!=NULL)
 	{
+		//char id[10];
+		//char nombre[21];
+		//char horasTrabajadas[10];
+		//char sueldo[10];
+
 		while(!feof(pFile))
 		{
-			Employee *pEmployee=employee_new();
+			Employee* pEmployee=employee_new();
 			fread(pEmployee, sizeof(Employee), 1, pFile);
 			if(feof(pFile))
 			{
 				break;
 			}
+			//printf("%s", pEmployee);
+			//printf("%d", pEmployee->id);
+			//Employee* employee = employee_newParametros(id, nombre, horasTrabajadas, sueldo);
+			ll_add(pArrayListEmployee, pEmployee);
 		}
 		fclose(pFile);
 		pFile=NULL;
+
+		if(controller_ListEmployee(pArrayListEmployee)==1)
+		{
+			printf("\nError al cargar la lista...");
+		}
 		return 0;
 	}
     return 1;
