@@ -163,10 +163,24 @@ int main()
 				}
 				system("pause");
 				break;
+            case 7:
+				if(flagListaCargada==1)
+				{
+					if(controller_sortEmployee(listaEmpleados)==1)
+					{
+						printf("\nError ingresar al menu de ordenamiento...\n");
+					}
+				}
+				else
+				{
+					printf("\nLa lista de empleados no fue cargada previamente...\n");
+				}
+				system("pause");
+				break;
             case 8:
 				if(flagListaCargada==1)
 				{
-					if(controller_saveAsText("dataPrueba.csv", listaEmpleados)==0)
+					if(controller_saveAsText("data.csv", listaEmpleados)==0)
 					{
 						printf("\nLa lista fue guardada en texto exitosamente...\n");
 					}
@@ -184,7 +198,7 @@ int main()
             case 9:
 				if(flagListaCargada==1)
 				{
-					if(controller_saveAsBinary("dataPrueba.csv", listaEmpleados)==0)
+					if(controller_saveAsBinary("datab.csv", listaEmpleados)==0)
 					{
 						printf("\nLa lista fue guardada en texto exitosamente...\n");
 					}

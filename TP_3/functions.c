@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "functions.h"
 
 Employee* employee_getById(LinkedList* pArrayListEmployee, int tam, int id)
@@ -17,4 +18,12 @@ Employee* employee_getById(LinkedList* pArrayListEmployee, int tam, int id)
 		}
 	}
 	return NULL;
+}
+
+int employee_orderBy(void* employeeA, void* employeeB)
+{
+	Employee *empA = employeeA;
+	Employee *empB = employeeB;
+
+	return strcmp(empA->nombre, empB->nombre);
 }

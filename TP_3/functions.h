@@ -5,5 +5,6 @@
 #define FUNCTIONS_H_
 
 Employee* employee_getById(LinkedList* pArrayListEmployee, int tam, int id);
+int employee_orderBy(void* employeeA, void* employeeB);
 
 #endif /* FUNCTIONS_H_ */

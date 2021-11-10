@@ -67,6 +67,8 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
 
 		sprintf(auxIdParse, "%d", auxId+1);
 
+		printLine("NUEVO EMPLEADO");
+
 		getName(auxNombre, "Ingrese nombre de empleado: ",
 			"El nombre es muy largo...\n",
 			"El nombre no puede contener caracteres especiales...\n",
@@ -267,6 +269,62 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_sortEmployee(LinkedList* pArrayListEmployee)
 {
+	if(pArrayListEmployee!=NULL)
+	{
+		int option;
+
+		int (*compareFunction)(void*, void*) = NULL;
+		compareFunction=employee_orderBy;
+
+		if(compareFunction!=NULL)
+		{
+			do{
+				printLine("ORDENAR EMPLEADOS");
+				printf("1. Orden ascendente\n2. Orden descendiente\n3. Atras");
+				printLine("");
+				option=getInt("\nIngrese una opcion (1-3): ", "Error. Ingrese una opcion valida (1-3): ", 1, 3);
+
+				switch(option)
+				{
+					case 1:
+						printLine("");
+						printf("\nEspere un momento mientras se realiza el ordenamiento...\n...\n");
+						if(ll_sort(pArrayListEmployee, compareFunction, 1)==0)
+						{
+							printf("\nLa lista fue ordenada de manera ascendente de manera exitosa...\n");
+						}
+						else
+						{
+							printf("\nError. La lista no pudo ser ordenada...\n");
+						}
+						break;
+					case 2:
+						printLine("");
+						printf("\nEspere un momento mientras se realiza el ordenamiento...\n...\n");
+						if(ll_sort(pArrayListEmployee, compareFunction, 0)==0)
+						{
+							printf("\nLa lista fue ordenada de manera descendente de manera exitosa...\n");
+						}
+						else
+						{
+							printf("\nError. La lista no pudo ser ordenada...\n");
+						}
+						break;
+					case 3:
+						if(verify("\nDesea salir al menu principal? ('s'): ")==0)
+						{
+							printf("\nVolviendo al menu principal...\n");
+							return 0;
+						}
+						else
+						{
+							option=0;
+						}
+						break;
+				}
+			}while(option!=3);
+		}
+	}
     return 1;
 }
 
