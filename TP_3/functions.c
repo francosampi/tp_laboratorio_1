@@ -20,6 +20,28 @@ Employee* employee_getById(LinkedList* pArrayListEmployee, int tam, int id)
 	return NULL;
 }
 
+int employee_orderById(void* employeeA, void* employeeB)
+{
+	if(employeeA!=NULL && employeeB!=NULL)
+	{
+		Employee *empA = (Employee*) employeeA;
+		Employee *empB = (Employee*) employeeB;
+
+		if(empA->id>empB->id)
+		{
+			return 1;
+		}
+		else
+		{
+			if (empB->id>empA->id)
+			{
+				return -1;
+			}
+		}
+	}
+	return -2;
+}
+
 int employee_orderByName(void* employeeA, void* employeeB)
 {
 	if(employeeA!=NULL && employeeB!=NULL)
@@ -31,3 +53,26 @@ int employee_orderByName(void* employeeA, void* employeeB)
 	}
 	return -2;
 }
+
+int employee_orderBySalary(void* employeeA, void* employeeB)
+{
+	if(employeeA!=NULL && employeeB!=NULL)
+	{
+		Employee *empA = (Employee*) employeeA;
+		Employee *empB = (Employee*) employeeB;
+
+		if(empA->sueldo>empB->sueldo)
+		{
+			return 1;
+		}
+		else
+		{
+			if (empB->sueldo>empA->sueldo)
+			{
+				return -1;
+			}
+		}
+	}
+	return -2;
+}
+
