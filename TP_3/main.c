@@ -26,7 +26,8 @@ int main()
 	setbuf(stdout, NULL);
 
     int opcion = 0;
-    int flagListaCargada = 0;
+    int flagListaCargada=0;
+    int ultimoIdIngresado=1000;
 
     LinkedList* listaEmpleados = ll_newLinkedList();
 
@@ -50,7 +51,7 @@ int main()
             case 1:
             	if(flagListaCargada==0)
             	{
-                    if(controller_loadFromText("data.csv",listaEmpleados)==0)
+                    if(listaEmpleados!=NULL && controller_loadFromText("data.csv",listaEmpleados)==0)
                     {
                     	printf("\nSe han cargado los datos exitosamente...\n");
                     	flagListaCargada=1;
@@ -69,7 +70,7 @@ int main()
             case 2:
             	if(flagListaCargada==0)
             	{
-                    if(controller_loadFromBinary("datab.csv",listaEmpleados)==0)
+                    if(listaEmpleados!=NULL && controller_loadFromBinary("datab.csv",listaEmpleados)==0)
                     {
                     	printf("\nSe han cargado los datos exitosamente...\n");
                     	flagListaCargada=1;
@@ -88,7 +89,7 @@ int main()
             case 3:
             	if(flagListaCargada==1)
             	{
-            		if(controller_addEmployee(listaEmpleados)==0)
+            		if(listaEmpleados!=NULL && controller_addEmployee(listaEmpleados, &ultimoIdIngresado)==0)
             		{
             			printf("\nSe ha cargado al empleado exitosamente...\n");
             		}
@@ -106,7 +107,7 @@ int main()
             case 4:
             	if(flagListaCargada==1)
             	{
-					if(controller_ListEmployee(listaEmpleados)==0)
+					if(listaEmpleados!=NULL && controller_ListEmployee(listaEmpleados)==0)
 					{
 						if(controller_editEmployee(listaEmpleados)==1)
 						{
@@ -127,7 +128,7 @@ int main()
             case 5:
 				if(flagListaCargada==1)
 				{
-					if(controller_ListEmployee(listaEmpleados)==0)
+					if(listaEmpleados!=NULL && controller_ListEmployee(listaEmpleados)==0)
 					{
 						if(controller_removeEmployee(listaEmpleados)==0)
 						{
@@ -135,12 +136,12 @@ int main()
 						}
 						else
 						{
-							printf("\nError al abrir menu de bajas...\n");
+							printf("\nNo se ha dado de baja ningun empleado...\n");
 						}
 					}
 					else
 					{
-						printf("\nError al cargar la lista...");
+						printf("\nError al cargar la lista...\n");
 					}
 				}
 				else
@@ -152,7 +153,7 @@ int main()
             case 6:
 				if(flagListaCargada==1)
 				{
-					if(controller_ListEmployee(listaEmpleados)==1)
+					if(listaEmpleados!=NULL && controller_ListEmployee(listaEmpleados)==1)
 					{
 						printf("\nError al cargar la lista...\n");
 					}
@@ -166,7 +167,7 @@ int main()
             case 7:
 				if(flagListaCargada==1)
 				{
-					if(controller_sortEmployee(listaEmpleados)==1)
+					if(listaEmpleados!=NULL && controller_sortEmployee(listaEmpleados)==1)
 					{
 						printf("\nError ingresar al menu de ordenamiento...\n");
 					}
@@ -180,7 +181,7 @@ int main()
             case 8:
 				if(flagListaCargada==1)
 				{
-					if(controller_saveAsText("data.csv", listaEmpleados)==0)
+					if(listaEmpleados!=NULL && controller_saveAsText("data.csv", listaEmpleados)==0)
 					{
 						printf("\nLa lista fue guardada en texto exitosamente...\n");
 					}
@@ -198,13 +199,13 @@ int main()
             case 9:
 				if(flagListaCargada==1)
 				{
-					if(controller_saveAsBinary("datab.csv", listaEmpleados)==0)
+					if(listaEmpleados!=NULL && controller_saveAsBinary("datab.csv", listaEmpleados)==0)
 					{
-						printf("\nLa lista fue guardada en texto exitosamente...\n");
+						printf("\nLa lista fue guardada en binario exitosamente...\n");
 					}
 					else
 					{
-						printf("\nError al guardar la lista en texto...\n");
+						printf("\nError al guardar la lista en binario...\n");
 					}
 				}
 				else
@@ -216,6 +217,10 @@ int main()
             case 10:
             	if(verify("\nDesea salir del programa? ('s'): ")==0)
             	{
+            		if(listaEmpleados!=NULL)
+            		{
+            			ll_deleteLinkedList(listaEmpleados);
+            		}
             		printf("\nSaliendo del programa...\n");
             	}
             	break;

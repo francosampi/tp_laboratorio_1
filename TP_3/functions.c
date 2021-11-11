@@ -20,10 +20,14 @@ Employee* employee_getById(LinkedList* pArrayListEmployee, int tam, int id)
 	return NULL;
 }
 
-int employee_orderBy(void* employeeA, void* employeeB)
+int employee_orderByName(void* employeeA, void* employeeB)
 {
-	Employee *empA = employeeA;
-	Employee *empB = employeeB;
+	if(employeeA!=NULL && employeeB!=NULL)
+	{
+		Employee *empA = (Employee*) employeeA;
+		Employee *empB = (Employee*) employeeB;
 
-	return strcmp(empA->nombre, empB->nombre);
+		return strcmp(empA->nombre, empB->nombre);
+	}
+	return -2;
 }

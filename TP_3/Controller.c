@@ -44,20 +44,20 @@ int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
 	return 1;
 }
 
-/** \brief Alta de empleados
+/**
+ * @brief Alta de empleados
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
- *
+ * @param pArrayListEmployee
+ * @param ultimoId (decidi cambiar la firma de esta funcion para que tome el ultimo id y poder asignarlo incrementado)
+ * @return int
  */
-int controller_addEmployee(LinkedList* pArrayListEmployee)
+int controller_addEmployee(LinkedList* pArrayListEmployee, int* ultimoId)
 {
 	if(pArrayListEmployee!=NULL)
 	{
 		Employee* employee=NULL;
-		int auxId=ll_len(pArrayListEmployee);
 
+		int auxId=*ultimoId+1;
 		char auxIdParse[10];
 		char auxNombre[128];
 		int auxHorasTrabajadas;
@@ -65,9 +65,9 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
 		int auxSueldo;
 		char auxSueldoParse[10];
 
-		sprintf(auxIdParse, "%d", auxId+1);
-
 		printLine("NUEVO EMPLEADO");
+
+		sprintf(auxIdParse, "%d", auxId);
 
 		getName(auxNombre, "Ingrese nombre de empleado: ",
 			"El nombre es muy largo...\n",
@@ -88,6 +88,7 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
 		{
 			employee=employee_newParametros(auxIdParse, auxNombre, auxHorasTrabajadasParse, auxSueldoParse);
 			ll_add(pArrayListEmployee, employee);
+			*ultimoId+=1;
 			free(employee);
 			employee=NULL;
 			return 0;
@@ -183,6 +184,12 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
 					break;
 				}
 			}while(opcion!=4);
+
+			if(auxEmpleado!=NULL)
+			{
+				free(auxEmpleado);
+				auxEmpleado=NULL;
+			}
 			return 0;
 		}
 	}
@@ -246,7 +253,7 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
 		printLine("");
 		for(int i=0; i<lltam; i++)
 		{
-			empleado=ll_get(pArrayListEmployee, i);
+			empleado=(Employee*) ll_get(pArrayListEmployee, i);
 			if(empleado!=NULL)
 			{
 				printf("%-5d %-20s %-20d %-20d\n", empleado->id, empleado->nombre, empleado->horasTrabajadas, empleado->sueldo);
@@ -274,7 +281,7 @@ int controller_sortEmployee(LinkedList* pArrayListEmployee)
 		int option;
 
 		int (*compareFunction)(void*, void*) = NULL;
-		compareFunction=employee_orderBy;
+		compareFunction=employee_orderByName;
 
 		if(compareFunction!=NULL)
 		{
@@ -348,10 +355,7 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 		for(int i=0; i<lltam; i++)
 		{
 			empleado=ll_get(pArrayListEmployee, i);
-			if(empleado!=NULL)
-			{
-				fprintf(pFile, "%d,%s,%d,%d\n", empleado->id, empleado->nombre, empleado->horasTrabajadas, empleado->sueldo);
-			}
+			fprintf(pFile, "%d,%s,%d,%d\n", empleado->id, empleado->nombre, empleado->horasTrabajadas, empleado->sueldo);
 		}
 		fclose(pFile);
 		path=NULL;
@@ -378,11 +382,8 @@ int controller_saveAsBinary(char* path , LinkedList* pArrayListEmployee)
 
 		for(int i=0; i<lltam; i++)
 		{
-			empleado=ll_get(pArrayListEmployee, i);
-			if(empleado!=NULL)
-			{
-				fwrite(empleado, sizeof(empleado), 1, pFile);
-			}
+			empleado=(Employee*) ll_get(pArrayListEmployee, i);
+			fwrite(empleado, sizeof(Employee), 1, pFile);
 		}
 		fclose(pFile);
 		path=NULL;
