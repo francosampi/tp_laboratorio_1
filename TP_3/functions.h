@@ -8,5 +8,6 @@ Employee* employee_getById(LinkedList* pArrayListEmployee, int tam, int id);
 int employee_orderById(void* employeeA, void* employeeB);
 int employee_orderByName(void* employeeA, void* employeeB);
 int employee_orderBySalary(void* employeeA, void* employeeB);
+void employee_listOne(Employee* employee);
 
 #endif /* FUNCTIONS_H_ */

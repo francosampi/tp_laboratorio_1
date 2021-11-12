@@ -123,14 +123,22 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
 		{
 			auxEmpleado=empleadoAModificar;
 
-			printf("\nEmpleado a modiifcar:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
-			printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
+			char auxEmpleadoNombre[128];
+			int auxEmpleadoId, auxEmpleadoHoras, auxEmpleadoSueldo;
+
+			employee_getId(auxEmpleado, &auxEmpleadoId);
+			employee_getNombre(auxEmpleado, auxEmpleadoNombre);
+			employee_getHorasTrabajadas(auxEmpleado, &auxEmpleadoHoras);
+			employee_getSueldo(auxEmpleado, &auxEmpleadoSueldo);
+
+			printf("\nEmpleado a modificar:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
+			employee_listOne(auxEmpleado);
 			printLine("");
 
 			do
 			{
 				printf("\nEmpleado a modificar:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
-				printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
+				employee_listOne(auxEmpleado);
 				printLine("");
 				printf("1. Modificar nombre\n2. Modificar horas trabajadas\n3. Modificar sueldo\n4. Salir");
 				printLine("");
@@ -138,36 +146,40 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
 				switch(opcion)
 				{
 					case 1:
-						getName(auxEmpleado->nombre, "Ingrese nombre de empleado: ",
+						getName(auxEmpleadoNombre, "Ingrese nombre de empleado: ",
 							"El nombre es muy largo...\n",
 							"El nombre no puede contener caracteres especiales...\n",
 							"El nombre no puede estar en blanco...\n",
 							128);
 						printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
-						printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
+						printf("%-5d %-20s %-20d %-20d\n", auxEmpleadoId, auxEmpleadoNombre, auxEmpleadoHoras, auxEmpleadoSueldo);
 						printLine("");
+
 						if(verify("Confirmar cambios? ('s'): ")==0)
 						{
+							employee_setNombre(auxEmpleado, auxEmpleadoNombre);
 							empleadoAModificar=auxEmpleado;
 						}
 					break;
 					case 2:
-						auxEmpleado->horasTrabajadas=getInt("Ingrese horas trabajadas: ", "Error. Ingrese horas trabajadas: ", 0, 99999);
+						auxEmpleadoHoras=getInt("Ingrese horas trabajadas: ", "Error. Ingrese horas trabajadas: ", 0, 99999);
 						printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
-						printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
+						printf("%-5d %-20s %-20d %-20d\n", auxEmpleadoId, auxEmpleadoNombre, auxEmpleadoHoras, auxEmpleadoSueldo);
 						printLine("");
 						if(verify("Confirmar cambios? ('s'): ")==0)
 						{
+							employee_setHorasTrabajadas(auxEmpleado, auxEmpleadoHoras);
 							empleadoAModificar=auxEmpleado;
 						}
 					break;
 					case 3:
-						auxEmpleado->sueldo=getInt("Ingrese sueldo: ", "Error. Ingrese sueldo: ", 20000, 999999);
+						auxEmpleadoSueldo=getInt("Ingrese sueldo: ", "Error. Ingrese sueldo: ", 20000, 999999);
 						printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
-						printf("%-5d %-20s %-20d %-20d\n", auxEmpleado->id, auxEmpleado->nombre, auxEmpleado->horasTrabajadas, auxEmpleado->sueldo);
+						printf("%-5d %-20s %-20d %-20d\n", auxEmpleadoId, auxEmpleadoNombre, auxEmpleadoHoras, auxEmpleadoSueldo);
 						printLine("");
 						if(verify("Confirmar cambios? ('s'): ")==0)
 						{
+							employee_setSueldo(auxEmpleado, auxEmpleadoSueldo);
 							empleadoAModificar=auxEmpleado;
 						}
 					break;
@@ -218,7 +230,7 @@ int controller_removeEmployee(LinkedList* pArrayListEmployee)
 		if(empleadoABorrar!=NULL)
 		{
 			printf("\nEmpleado a remover:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
-			printf("%-5d %-20s %-20d %-20d\n", empleadoABorrar->id, empleadoABorrar->nombre, empleadoABorrar->horasTrabajadas, empleadoABorrar->sueldo);
+			employee_listOne(empleadoABorrar);
 			printLine("");
 			if(verify("Confirmar baja? ('s'): ")==0)
 			{
@@ -254,10 +266,7 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
 		for(int i=0; i<lltam; i++)
 		{
 			empleado=(Employee*) ll_get(pArrayListEmployee, i);
-			if(empleado!=NULL)
-			{
-				printf("%-5d %-20s %-20d %-20d\n", empleado->id, empleado->nombre, empleado->horasTrabajadas, empleado->sueldo);
-			}
+			employee_listOne(empleado);
 		}
 		printLine("");
 		free(empleado);
@@ -396,15 +405,24 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 	if(path!=NULL && pArrayListEmployee!=NULL)
 	{
 		FILE* pFile = fopen(path, "w");
-
 		Employee *empleado=NULL;
+
+		char auxNombre[128];
+		int auxId, auxHoras, auxSueldo;
+
 		int lltam=ll_len(pArrayListEmployee);
 
 		fprintf(pFile, "%s\n", "id,nombre,horasTrabajadas,sueldo");
 		for(int i=0; i<lltam; i++)
 		{
 			empleado=ll_get(pArrayListEmployee, i);
-			fprintf(pFile, "%d,%s,%d,%d\n", empleado->id, empleado->nombre, empleado->horasTrabajadas, empleado->sueldo);
+
+			employee_getId(empleado, &auxId);
+			employee_getNombre(empleado, auxNombre);
+			employee_getHorasTrabajadas(empleado, &auxHoras);
+			employee_getSueldo(empleado, &auxSueldo);
+
+			fprintf(pFile, "%d,%s,%d,%d\n", auxId, auxNombre, auxHoras, auxSueldo);
 		}
 		fclose(pFile);
 		path=NULL;
