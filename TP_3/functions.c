@@ -52,8 +52,8 @@ int employee_orderById(void* employeeA, void* employeeB)
 		Employee *empA = (Employee*) employeeA;
 		Employee *empB = (Employee*) employeeB;
 
-		employee_getSueldo(empA, &auxIdA);
-		employee_getSueldo(empB, &auxIdB);
+		employee_getId(empA, &auxIdA);
+		employee_getId(empB, &auxIdB);
 
 		if(auxIdA>auxIdB)
 		{
