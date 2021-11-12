@@ -12,15 +12,21 @@
  * @param id
  * @return empleado (ok) o NULL (error)
  */
-Employee* employee_getById(LinkedList* pArrayListEmployee, int tam, int id)
+Employee* employee_getById(LinkedList* pArrayListEmployee, int id)
 {
 	if(pArrayListEmployee!=NULL)
 	{
 		Employee *empleado=NULL;
+
+		int tam=ll_len(pArrayListEmployee);
+		int auxId;
+
 		for(int i=0; i<tam; i++)
 		{
-			empleado=ll_get(pArrayListEmployee, i);
-			if(empleado->id==id)
+			empleado=(Employee*) ll_get(pArrayListEmployee, i);
+			employee_getId(empleado, &auxId);
+
+			if(empleado!=NULL && auxId==id)
 			{
 				return empleado;
 			}
@@ -141,5 +147,39 @@ void employee_listOne(Employee* employee)
 	employee_getSueldo(employee, &auxSueldo);
 
 	printf("%-5d %-20s %-20d %-20d\n", auxId, auxNombre, auxHoras, auxSueldo);
+}
+
+/**
+ * @fn int ll_getLastId(LinkedList*)
+ * @brief Luego de cargar una lista, calculara cual es el ultimo id ingresado
+ *
+ * @param pArrayListEmployee
+ * @return el ultimo id
+ */
+int ll_getLastId(LinkedList* pArrayListEmployee)
+{
+	if(pArrayListEmployee!=NULL)
+	{
+		int tam=ll_len(pArrayListEmployee);
+		int lastId=-1;
+
+		for(int i=0; i<tam; i++)
+		{
+			Employee* employee=ll_get(pArrayListEmployee, i);
+
+			if(employee!=NULL)
+			{
+				int auxId;
+				employee_getId(employee, &auxId);
+
+				if(auxId>lastId)
+				{
+					lastId=auxId;
+				}
+			}
+		}
+		return lastId;
+	}
+	return 1;
 }
 

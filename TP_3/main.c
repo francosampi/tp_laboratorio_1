@@ -4,6 +4,7 @@
 #include "Controller.h"
 #include "Employee.h"
 #include "inputs.h"
+#include "functions.h"
 
 /****************************************************
     Menu:
@@ -27,7 +28,7 @@ int main()
 
     int opcion = 0;
     int flagListaCargada=0;
-    int ultimoIdIngresado=1000;
+    int ultimoIdIngresado;
 
     LinkedList* listaEmpleados = ll_newLinkedList();
 
@@ -44,6 +45,7 @@ int main()
 			  "9. Guardar los datos de los empleados en el archivo datab.csv (modo binario)\n"
 			 "10. Salir");
 		printLine("");
+
 		opcion=getInt("\nIngrese una opcion (1-10): ", "\nError. Ingrese una opcion (1-10): ", 1, 10);
 
         switch(opcion)
@@ -54,6 +56,7 @@ int main()
                     if(listaEmpleados!=NULL && controller_loadFromText("data.csv",listaEmpleados)==0)
                     {
                     	printf("\nSe han cargado los datos exitosamente...\n");
+                    	ultimoIdIngresado=ll_getLastId(listaEmpleados);
                     	flagListaCargada=1;
                     }
                     else
@@ -73,6 +76,7 @@ int main()
                     if(listaEmpleados!=NULL && controller_loadFromBinary("datab.csv",listaEmpleados)==0)
                     {
                     	printf("\nSe han cargado los datos exitosamente...\n");
+                    	ultimoIdIngresado=ll_getLastId(listaEmpleados);
                     	flagListaCargada=1;
                     }
                     else
@@ -109,7 +113,7 @@ int main()
             	{
 					if(listaEmpleados!=NULL && controller_ListEmployee(listaEmpleados)==0)
 					{
-						if(controller_editEmployee(listaEmpleados)==1)
+						if(controller_editEmployee(listaEmpleados, ultimoIdIngresado)==1)
 						{
 							printf("\nError al abrir menu de modificacion...\n");
 						}
@@ -130,7 +134,7 @@ int main()
 				{
 					if(listaEmpleados!=NULL && controller_ListEmployee(listaEmpleados)==0)
 					{
-						if(controller_removeEmployee(listaEmpleados)==0)
+						if(controller_removeEmployee(listaEmpleados, ultimoIdIngresado)==0)
 						{
 							printf("\nSe ha dado de baja al empleado exitosamente...\n");
 						}

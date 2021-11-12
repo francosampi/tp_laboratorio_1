@@ -106,15 +106,14 @@ int controller_addEmployee(LinkedList* pArrayListEmployee, int* ultimoId)
  * \return int
  *
  */
-int controller_editEmployee(LinkedList* pArrayListEmployee)
+int controller_editEmployee(LinkedList* pArrayListEmployee, int ultimoId)
 {
 	if(pArrayListEmployee!=NULL)
 	{
-		int lltam=ll_len(pArrayListEmployee);
-		int opcion=getInt("Ingrese ID del empleado a modificar: ", "Error. Ingrese ID del empleado a modificar: ", 0, lltam);
+		int opcion=getInt("Ingrese ID del empleado a modificar: ", "Error. Ingrese ID del empleado a modificar: ", 0, ultimoId);
 
 		Employee *empleadoAModificar=NULL;
-		empleadoAModificar=employee_getById(pArrayListEmployee, lltam, opcion);
+		empleadoAModificar=employee_getById(pArrayListEmployee, opcion);
 
 		Employee *auxEmpleado=NULL;
 		auxEmpleado=employee_new();
@@ -208,23 +207,23 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
     return 1;
 }
 
-/** \brief Baja de empleado
+/** \brief Baja de empleado (cambie la firma para que tambien reciba el ultimo id para poder removerlo)
  *
  * \param path char*
  * \param pArrayListEmployee LinkedList*
  * \return int
  *
  */
-int controller_removeEmployee(LinkedList* pArrayListEmployee)
+int controller_removeEmployee(LinkedList* pArrayListEmployee, int ultimoId)
 {
 	if(pArrayListEmployee!=NULL)
 	{
 		Employee *empleadoABorrar=NULL;
-		int lltam=ll_len(pArrayListEmployee);
-		int opcion=getInt("Ingrese ID del empleado a remover: ", "Error. Ingrese ID del empleado a remover: ", 0, lltam);
+
+		int opcion=getInt("Ingrese ID del empleado a remover: ", "Error. Ingrese ID del empleado a remover: ", 0, ultimoId);
 		int index;
 
-		empleadoABorrar=employee_getById(pArrayListEmployee, lltam, opcion);
+		empleadoABorrar=employee_getById(pArrayListEmployee, opcion);
 		index=ll_indexOf(pArrayListEmployee, empleadoABorrar);
 
 		if(empleadoABorrar!=NULL)
@@ -235,13 +234,9 @@ int controller_removeEmployee(LinkedList* pArrayListEmployee)
 			if(verify("Confirmar baja? ('s'): ")==0)
 			{
 				ll_remove(pArrayListEmployee, index);
-				free(empleadoABorrar);
-				empleadoABorrar=NULL;
 				return 0;
 			}
 		}
-		free(empleadoABorrar);
-		empleadoABorrar=NULL;
 	}
     return 1;
 }
@@ -415,7 +410,7 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 		fprintf(pFile, "%s\n", "id,nombre,horasTrabajadas,sueldo");
 		for(int i=0; i<lltam; i++)
 		{
-			empleado=ll_get(pArrayListEmployee, i);
+			empleado=(Employee*) ll_get(pArrayListEmployee, i);
 
 			employee_getId(empleado, &auxId);
 			employee_getNombre(empleado, auxNombre);
@@ -425,7 +420,7 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 			fprintf(pFile, "%d,%s,%d,%d\n", auxId, auxNombre, auxHoras, auxSueldo);
 		}
 		fclose(pFile);
-		path=NULL;
+		pFile=NULL;
 		return 0;
 	}
     return 1;
@@ -443,8 +438,8 @@ int controller_saveAsBinary(char* path , LinkedList* pArrayListEmployee)
 	if(path!=NULL && pArrayListEmployee!=NULL)
 	{
 		FILE* pFile = fopen(path, "wb");
-
 		Employee *empleado=NULL;
+
 		int lltam=ll_len(pArrayListEmployee);
 
 		for(int i=0; i<lltam; i++)
@@ -453,7 +448,7 @@ int controller_saveAsBinary(char* path , LinkedList* pArrayListEmployee)
 			fwrite(empleado, sizeof(Employee), 1, pFile);
 		}
 		fclose(pFile);
-		path=NULL;
+		pFile=NULL;
 		return 0;
 	}
     return 1;
