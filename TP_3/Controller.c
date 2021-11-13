@@ -280,6 +280,7 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
 			employee_listOne(empleado);
 		}
 		printLine("");
+
 		if(empleado!=NULL)
 		{
 			free(empleado);
@@ -440,6 +441,11 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 
 			fprintf(pFile, "%d,%s,%d,%d\n", auxId, auxNombre, auxHoras, auxSueldo);
 		}
+		if (empleado!=NULL)
+		{
+			free(empleado);
+			empleado=NULL;
+		}
 		fclose(pFile);
 		pFile=NULL;
 		return 0;
@@ -469,6 +475,11 @@ int controller_saveAsBinary(char* path , LinkedList* pArrayListEmployee)
 		{
 			empleado=(Employee*) ll_get(pArrayListEmployee, i);
 			fwrite(empleado, sizeof(Employee), 1, pFile);
+		}
+		if (empleado!=NULL)
+		{
+			free(empleado);
+			empleado=NULL;
 		}
 		fclose(pFile);
 		pFile=NULL;
