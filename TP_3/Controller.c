@@ -7,10 +7,11 @@
 #include "inputs.h"
 
 /** \brief Carga los datos de los empleados desde el archivo data.csv (modo texto).
+ *  Se abre el archivo en el path pasado por parametro (si existe) y se pasean los datos
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
+ * \param path char* el path del archivo data texto
+ * \param pArrayListEmployee LinkedList* el puntero a la linked list
+ * \return int 0 (OK) o 1 (error)
  *
  */
 int controller_loadFromText(char* path , LinkedList* pArrayListEmployee)
@@ -25,11 +26,12 @@ int controller_loadFromText(char* path , LinkedList* pArrayListEmployee)
 	return 1;
 }
 
-/** \brief Carga los datos de los empleados desde el archivo data.csv (modo binario).
+/** \brief Carga los datos de los empleados desde el archivo datab.csv (modo binario).
+ * Se abre el archivo en el path pasado por parametro (si existe) y se pasean los datos
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
+ * \param path char* el path del archivo data binario
+ * \param pArrayListEmployee LinkedList* el puntero a la linked list
+ * \return int 0 (OK) o 1 (error)
  *
  */
 int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
@@ -45,11 +47,13 @@ int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
 }
 
 /**
- * @brief Alta de empleados
+ * @brief Alta de empleados (decidi cambiar la firma de esta funcion para que tome el ultimo id y poder asignarlo incrementado)
+ * se declaran variables por cada tipo de campo del empleado, luego su version parseada a char usando sprintf
+ * se agrega un elemento a la linked list con estos campos
  *
- * @param pArrayListEmployee
- * @param ultimoId (decidi cambiar la firma de esta funcion para que tome el ultimo id y poder asignarlo incrementado)
- * @return int
+ * @param pArrayListEmployee el puntero a la linked list
+ * @param ultimoId ultimo ID ingresado por el usuario como puntero para incrementarlo
+ * @return int 0 (OK) o 1 (error)
  */
 int controller_addEmployee(LinkedList* pArrayListEmployee, int* ultimoId)
 {
@@ -89,21 +93,31 @@ int controller_addEmployee(LinkedList* pArrayListEmployee, int* ultimoId)
 			employee=employee_newParametros(auxIdParse, auxNombre, auxHorasTrabajadasParse, auxSueldoParse);
 			ll_add(pArrayListEmployee, employee);
 			*ultimoId+=1;
-			free(employee);
-			employee=NULL;
+
+			if(employee!=NULL)
+			{
+				free(employee);
+				employee=NULL;
+			}
 			return 0;
 		}
-		free(employee);
-		employee=NULL;
+		if(employee!=NULL)
+		{
+			free(employee);
+			employee=NULL;
+		}
 	}
     return 1;
 }
 
-/** \brief Modificar datos de empleado
+/** \brief (cambie la firma para que tambien reciba el ultimo id para poder modificarlo)
+ * creamos un puntero a empleado nuevo y reservamos en memoria. Este sera un auxiliar para ir comparando los datos del empleado que queremos modificar y este.
+ * se listan todos los empleados y el usuario podra modificar cualquiera (del 0 al ultimo id ingresado) hace un get de todos los datos del empleado a modificar para rellenar los campos del auxiliar
+ * por cada campo que se quiera modificar el menu se encarga de preguntar si guardar los cambios o no. Luego de todo el proceso de modificacion se libera el espacio reservado para el auxiliar
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
+ * \param ultimoId ultimo ID ingresado por el usuario
+ * \param pArrayListEmployee LinkedList* el puntero a la linked list
+ * \return int 0 (OK) o 1 (error)
  *
  */
 int controller_editEmployee(LinkedList* pArrayListEmployee, int ultimoId)
@@ -208,10 +222,12 @@ int controller_editEmployee(LinkedList* pArrayListEmployee, int ultimoId)
 }
 
 /** \brief Baja de empleado (cambie la firma para que tambien reciba el ultimo id para poder removerlo)
+ * creamos un puntero a empleado, el usuario accede a la lista de empleados e ingresara un id (del 0 al ultimo id ingresado) si lo encuentra, se listara y apuntara a ese empleado
+ * liberamos la memoria de ese empleado y lo removemos de la linked list si el usuario guarda los cambios
  *
- * \param path char*
+ * \param ultimoId ultimo id ingresado por el usuario
  * \param pArrayListEmployee LinkedList*
- * \return int
+ * \return int 0 (OK) o 1 (error)
  *
  */
 int controller_removeEmployee(LinkedList* pArrayListEmployee, int ultimoId)
@@ -241,11 +257,11 @@ int controller_removeEmployee(LinkedList* pArrayListEmployee, int ultimoId)
     return 1;
 }
 
-/** \brief Listar empleados
+/** \brief toma el puntero a la linked list y la utilizara para el tamaño, tomara el index desde 0 al tamaño para mostrar en consola todos los empleados de la lista.
+ * Para eso creara un auxiliar de puntero a empleado, tomara uno por uno para luego hacer un free (liberar la memoria) al terminar
  *
- * \param path char*
  * \param pArrayListEmployee LinkedList*
- * \return int
+ * \return int 0 (OK) o 1 (error)
  *
  */
 int controller_ListEmployee(LinkedList* pArrayListEmployee)
@@ -264,18 +280,21 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
 			employee_listOne(empleado);
 		}
 		printLine("");
-		free(empleado);
-		empleado=NULL;
+		if(empleado!=NULL)
+		{
+			free(empleado);
+			empleado=NULL;
+		}
 		return 0;
 	}
     return 1;
 }
 
-/** \brief Ordenar empleados
+/** \brief declara un puntero a la funcion de criterio para su ordenamiento. Crea un menu para que el usuario decida ordenar por ID, nombre, sueldo, cualquiera de los campos
+ * de manera ascendente o descendente.
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
+ * \param pArrayListEmployee LinkedList* puntero a la linked list
+ * \return int 0 (OK) o 1 (error)
  *
  */
 int controller_sortEmployee(LinkedList* pArrayListEmployee)
@@ -389,10 +408,12 @@ int controller_sortEmployee(LinkedList* pArrayListEmployee)
 }
 
 /** \brief Guarda los datos de los empleados en el archivo data.csv (modo texto).
+ * se abre el archivo con el path pasado por parametro (si existe) y declaramos un puntero a empleado
+ * se toma el tamaño de la lista y por cada elemento leido en el archivo (menos el encabezado) se guardan los campos de los empleados cargados en la aplicacion (usando getters)
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
+ * \param path char* el path al archivo de data texto
+ * \param pArrayListEmployee LinkedList* el puntero a la linked list
+ * \return int 0 (OK) o 1 (error)
  *
  */
 int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
@@ -427,10 +448,12 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 }
 
 /** \brief Guarda los datos de los empleados en el archivo data.csv (modo binario).
+ * se abre el archivo con el path pasado por parametro (si existe) y declaramos un puntero a empleado
+ * se toma el tamaño de la lista y por cada elemento leido en el archivo se guardan los campos de los empleados cargados en la aplicacion (usando getters)
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
+ * \param path char* el path al archivo de data binario
+ * \param pArrayListEmployee LinkedList* el puntero a la linked list
+ * \return int 0 (OK) o 1 (error)
  *
  */
 int controller_saveAsBinary(char* path , LinkedList* pArrayListEmployee)
