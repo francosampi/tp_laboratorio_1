@@ -79,10 +79,10 @@ int controller_addEmployee(LinkedList* pArrayListEmployee, int* ultimoId)
 			"El nombre no puede estar en blanco...\n",
 			128);
 
-		auxHorasTrabajadas=getInt("Ingrese horas trabajadas: ", "Error. Ingrese horas trabajadas: ", 0, 99999);
+		auxHorasTrabajadas=getInt("Ingrese horas trabajadas: ", "Error. Ingrese horas trabajadas: ", 0, 9999);
 		sprintf(auxHorasTrabajadasParse, "%d", auxHorasTrabajadas);
 
-		auxSueldo=getInt("Ingrese sueldo: ", "Error. Ingrese sueldo: ", 20000, 999999);
+		auxSueldo=getInt("Ingrese sueldo: ", "Error. Ingrese sueldo: ", 1000, 9999999);
 		sprintf(auxSueldoParse, "%d", auxSueldo);
 
 		printf("\nEmpleado a agregar:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
@@ -175,7 +175,7 @@ int controller_editEmployee(LinkedList* pArrayListEmployee, int ultimoId)
 						}
 					break;
 					case 2:
-						auxEmpleadoHoras=getInt("Ingrese horas trabajadas: ", "Error. Ingrese horas trabajadas: ", 0, 99999);
+						auxEmpleadoHoras=getInt("Ingrese horas trabajadas: ", "Error. Ingrese horas trabajadas: ", 0, 9999);
 						printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
 						printf("%-5d %-20s %-20d %-20d\n", auxEmpleadoId, auxEmpleadoNombre, auxEmpleadoHoras, auxEmpleadoSueldo);
 						printLine("");
@@ -186,7 +186,7 @@ int controller_editEmployee(LinkedList* pArrayListEmployee, int ultimoId)
 						}
 					break;
 					case 3:
-						auxEmpleadoSueldo=getInt("Ingrese sueldo: ", "Error. Ingrese sueldo: ", 20000, 999999);
+						auxEmpleadoSueldo=getInt("Ingrese sueldo: ", "Error. Ingrese sueldo: ", 1000, 9999999);
 						printf("\nEmpleado luego de la modificacion:\n\n%-5s %-20s %-20s %-20s\n", "ID", "Nombre", "Horas trabajadas", "Salario");
 						printf("%-5d %-20s %-20d %-20d\n", auxEmpleadoId, auxEmpleadoNombre, auxEmpleadoHoras, auxEmpleadoSueldo);
 						printLine("");
