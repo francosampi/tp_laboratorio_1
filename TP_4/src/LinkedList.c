@@ -552,6 +552,11 @@ LinkedList* ll_clone(LinkedList* this)
 {
     LinkedList* cloneArray = NULL;
 
+    if(this!=NULL)
+    {
+    	cloneArray=ll_newLinkedList();
+    	cloneArray=this;
+    }
     return cloneArray;
 }
 
@@ -567,7 +572,33 @@ int ll_sort(LinkedList* this, int (*pFunc)(void* ,void*), int order)
 {
     int returnAux =-1;
 
-    return returnAux;
+    if(this!=NULL && pFunc!=NULL)
+    {
+    	void* pA = NULL;
+    	void* pB = NULL;
 
+    	if(order==1)
+    	{
+    		void* auxSort = pB;
+			pB=pA;
+			pA=auxSort;
+			returnAux=0;
+    	}
+    	else
+    	{
+    		if(order==0)
+    		{
+    			void* auxSort = pA;
+    			pA=pB;
+    			pA=auxSort;
+    			returnAux=0;
+    		}
+    		else
+    		{
+    			returnAux=-1;
+    		}
+    	}
+    }
+    return returnAux;
 }
 
