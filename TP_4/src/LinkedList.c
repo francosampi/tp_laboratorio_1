@@ -3,7 +3,6 @@
 #include <string.h>
 #include "LinkedList.h"
 
-
 static Node* getNode(LinkedList* this, int nodeIndex);
 static int addNode(LinkedList* this, int nodeIndex,void* pElement);
 
@@ -34,16 +33,6 @@ int ll_len(LinkedList* this)
     if(this!=NULL)
     {
     	returnAux=this->size;
-    	/*
-    	struct Node* auxP=this->pFirstNode;
-    	returnAux=0;
-
-    	while(auxP!=NULL)
-    	{
-    		auxP=auxP->pNextNode;
-    		returnAux++;
-    	}
-    	*/
     }
     return returnAux;
 }
@@ -105,39 +94,39 @@ static int addNode(LinkedList* this, int nodeIndex,void* pElement)
 
 	if(this!=NULL)
 	{
-		Node* pNode=(Node*)malloc(sizeof(Node));
-		pNode->pElement=pElement;
-
-		int tam = ll_len(this);
-		tam++;
+		int tam = ll_len(this)+1;
 
 		if(nodeIndex>-1 && nodeIndex<tam)
 		{
-			if(nodeIndex!=0)
+			Node* pNode=(Node*)malloc(sizeof(Node));
+
+			if(pNode!=NULL)
 			{
-				Node* auxAnterior=NULL;
-				Node* auxSiguiente=NULL;
+				pNode->pElement=pElement;
+				pNode->pNextNode=NULL;
 
-				auxAnterior=getNode(this, nodeIndex-1);
-
-				if(auxAnterior!=NULL)
+				if(nodeIndex!=0)
 				{
-					auxAnterior->pNextNode=pNode;
-				}
-				auxSiguiente=getNode(this, nodeIndex+1);
+					Node* auxAnterior=getNode(this, nodeIndex-1);
+					Node* auxSiguiente=pNode->pNextNode;
 
-				if(auxSiguiente!=NULL)
-				{
-					pNode->pNextNode=auxSiguiente;
+					if(auxAnterior!=NULL)
+					{
+						auxAnterior->pNextNode=pNode;
+					}
+					if(auxSiguiente!=NULL)
+					{
+						pNode->pNextNode=auxSiguiente;
+					}
 				}
+				else
+				{
+					pNode->pNextNode=this->pFirstNode;
+					this->pFirstNode=pNode;
+				}
+				this->size++;
+				returnAux=0;
 			}
-			else
-			{
-				pNode->pNextNode=this->pFirstNode;
-				this->pFirstNode=pNode;
-			}
-			this->size++;
-			returnAux=0;
 		}
 	}
     return returnAux;
@@ -171,7 +160,7 @@ int ll_add(LinkedList* this, void* pElement)
 
     if(this!=NULL)
     {
-    	int tam=ll_len(this);
+    	int tam = ll_len(this);
 
     	addNode(this, tam, pElement);
     	returnAux=0;
@@ -249,15 +238,15 @@ int ll_remove(LinkedList* this,int index)
     if(this!=NULL)
     {
 		int tam = ll_len(this);
-		Node* auxP=this->pFirstNode;
+		Node* auxP=getNode(this, index);
 
 		if(index>-1 && index<tam)
 		{
-			auxP=getNode(this, index);
 			Node* next=auxP->pNextNode;
+
 			if(index>0)
 			{
-				struct Node* prev=getNode(this, index-1);
+				Node* prev=getNode(this, index-1);
 				if(prev!=NULL)
 				{
 					prev->pNextNode=next;
@@ -265,7 +254,7 @@ int ll_remove(LinkedList* this,int index)
 			}
 			else
 			{
-				this->pFirstNode=NULL;
+				this->pFirstNode=next;
 			}
 			this->size--;
 			free(auxP);
@@ -343,6 +332,7 @@ int ll_indexOf(LinkedList* this, void* pElement)
 		for(int i=0; i<tam; i++)
 		{
 			auxP=ll_get(this, i);
+
 			if(auxP==pElement)
 			{
 				returnAux=i;
@@ -435,6 +425,7 @@ void* ll_pop(LinkedList* this,int index)
 int ll_contains(LinkedList* this, void* pElement)
 {
     int returnAux = -1;
+
     if(this!=NULL)
     {
     	returnAux=0;
@@ -518,7 +509,8 @@ LinkedList* ll_subList(LinkedList* this,int from,int to)
 		if(from>-1 && from<tam+1 && to>from-1 && to<tam+1)
 		{
 			cloneArray=ll_newLinkedList();
-			void* auxP;
+
+			void* auxP=NULL;
 
 			for(int i=from; i<to; i++)
 			{
@@ -547,7 +539,8 @@ LinkedList* ll_clone(LinkedList* this)
 
     if(this!=NULL)
     {
-    	int tam=ll_len(this);
+    	int tam = ll_len(this);
+
     	cloneArray=ll_subList(this, 0, tam);
     }
     return cloneArray;
