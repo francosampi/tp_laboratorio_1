@@ -1,79 +1,234 @@
-/*
-    utest example : Unit test examples.
-    Copyright (C) <2018>  <Mauricio Davila>
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include "../testing/inc/main_test.h"
-#include "../inc/LinkedList.h"
+#include "LinkedList.h"
+#include "Controller.h"
+#include "Employee.h"
+#include "inputs.h"
+#include "functions.h"
+
+/****************************************************
+    Menu:
+     1. Cargar los datos de los empleados desde el archivo data.csv (modo texto).
+     2. Cargar los datos de los empleados desde el archivo data.csv (modo binario).
+     3. Alta de empleado
+     4. Modificar datos de empleado
+     5. Baja de empleado
+     6. Listar empleados
+     7. Ordenar empleados
+     8. Guardar los datos de los empleados en el archivo data.csv (modo texto).
+     9. Guardar los datos de los empleados en el archivo data.csv (modo binario).
+    10. Salir
+*****************************************************/
 
 
-int main(void)
+
+int main()
 {
-	/*
-	startTesting(1);  // ll_newLinkedList
-	startTesting(2);  // ll_len
-	startTesting(3);  // getNode - test_getNode
-	startTesting(4);  // addNode - test_addNode
-	startTesting(5);  // ll_add
-	startTesting(6);  // ll_get
-	startTesting(7);  // ll_set
-	startTesting(8);  // ll_remove
-	startTesting(9);  // ll_clear
-	startTesting(10); // ll_deleteLinkedList
-	startTesting(11); // ll_indexOf
-	startTesting(12); // ll_isEmpty
-	startTesting(13); // ll_push
-	startTesting(14); // ll_pop
-	startTesting(15); // ll_contains
-	startTesting(16); // ll_containsAll
-	startTesting(17); // ll_subList
-	startTesting(18); // ll_clone
-	*/
-	//startTesting(19); // ll_sort
+	setbuf(stdout, NULL);
 
+    int opcion = 0;
+    int flagListaCargada=0;
+    int ultimoIdIngresado;
+
+    LinkedList* listaEmpleados = ll_newLinkedList();
+
+    do{
+        printLine("MENU");
+        printf("1. Cargar los datos de los empleados desde el archivo data.csv (modo texto)\n"
+			  "2. Cargar los datos de los empleados desde el archivo datab.csv (modo binario)\n"
+			  "3. Alta de empleado\n"
+			  "4. Modificar datos de empleado\n"
+			  "5. Baja de empleado\n"
+			  "6. Listar empleados\n"
+			  "7. Ordenar empleados\n"
+			  "8. Guardar los datos de los empleados en el archivo data.csv (modo texto)\n"
+			  "9. Guardar los datos de los empleados en el archivo datab.csv (modo binario)\n"
+			 "10. Salir");
+		printLine("");
+
+		opcion=getInt("\nIngrese una opcion (1-10): ", "\nError. Ingrese una opcion (1-10): ", 1, 10);
+
+        switch(opcion)
+        {
+            case 1:
+            	if(flagListaCargada==0)
+            	{
+                    if(listaEmpleados!=NULL && controller_loadFromText("src/data.csv",listaEmpleados)==0)
+                    {
+                    	printf("\nSe han cargado los datos exitosamente...\n");
+                    	ultimoIdIngresado=ll_getLastId(listaEmpleados);
+                    	flagListaCargada=1;
+                    }
+                    else
+                    {
+                    	printf("\nError al cargar los datos...\n");
+                    }
+            	}
+            	else
+            	{
+            		printf("\nLa lista ya ha sido cargada...\n");
+            	}
+                system("pause");
+                break;
+            case 2:
+            	if(flagListaCargada==0)
+            	{
+                    if(listaEmpleados!=NULL && controller_loadFromBinary("src/datab.csv",listaEmpleados)==0)
+                    {
+                    	printf("\nSe han cargado los datos exitosamente...\n");
+                    	ultimoIdIngresado=ll_getLastId(listaEmpleados);
+                    	flagListaCargada=1;
+                    }
+                    else
+                    {
+                    	printf("\nError al cargar los datos...\n");
+                    }
+            	}
+            	else
+            	{
+            		printf("\nLa lista ya ha sido cargada...\n");
+            	}
+                system("pause");
+                break;
+            case 3:
+            	if(flagListaCargada==1)
+            	{
+            		if(listaEmpleados!=NULL && controller_addEmployee(listaEmpleados, &ultimoIdIngresado)==0)
+            		{
+            			printf("\nSe ha cargado al empleado exitosamente...\n");
+            		}
+            		else
+					{
+						printf("\nError al cargar al empleado...\n");
+					}
+            	}
+            	else
+            	{
+            		printf("\nLa lista de empleados no fue cargada previamente...\n");
+            	}
+                system("pause");
+                break;
+            case 4:
+            	if(flagListaCargada==1)
+            	{
+					if(listaEmpleados!=NULL && controller_ListEmployee(listaEmpleados)==0)
+					{
+						if(controller_editEmployee(listaEmpleados, ultimoIdIngresado)==1)
+						{
+							printf("\nError al abrir menu de modificacion...\n");
+						}
+					}
+					else
+					{
+						printf("\nError al cargar la lista...\n");
+					}
+            	}
+            	else
+            	{
+            		printf("\nLa lista de empleados no fue cargada previamente...\n");
+            	}
+                system("pause");
+                break;
+            case 5:
+				if(flagListaCargada==1)
+				{
+					if(listaEmpleados!=NULL && controller_ListEmployee(listaEmpleados)==0)
+					{
+						if(controller_removeEmployee(listaEmpleados, ultimoIdIngresado)==0)
+						{
+							printf("\nSe ha dado de baja al empleado exitosamente...\n");
+						}
+						else
+						{
+							printf("\nNo se ha dado de baja ningun empleado...\n");
+						}
+					}
+					else
+					{
+						printf("\nError al cargar la lista...\n");
+					}
+				}
+				else
+				{
+					printf("\nLa lista de empleados no fue cargada previamente...\n");
+				}
+				system("pause");
+				break;
+            case 6:
+				if(flagListaCargada==1)
+				{
+					if(listaEmpleados!=NULL && controller_ListEmployee(listaEmpleados)==1)
+					{
+						printf("\nError al cargar la lista...\n");
+					}
+				}
+				else
+				{
+					printf("\nLa lista de empleados no fue cargada previamente...\n");
+				}
+				system("pause");
+				break;
+            case 7:
+				if(flagListaCargada==1)
+				{
+					if(listaEmpleados!=NULL && controller_sortEmployee(listaEmpleados)==1)
+					{
+						printf("\nError ingresar al menu de ordenamiento...\n");
+					}
+				}
+				else
+				{
+					printf("\nLa lista de empleados no fue cargada previamente...\n");
+				}
+				system("pause");
+				break;
+            case 8:
+				if(flagListaCargada==1)
+				{
+					if(listaEmpleados!=NULL && controller_saveAsText("src/data.csv", listaEmpleados)==0)
+					{
+						printf("\nLa lista fue guardada en texto exitosamente...\n");
+					}
+					else
+					{
+						printf("\nError al guardar la lista en texto...\n");
+					}
+				}
+				else
+				{
+					printf("\nLa lista de empleados no fue cargada previamente...\n");
+				}
+				system("pause");
+				break;
+            case 9:
+				if(flagListaCargada==1)
+				{
+					if(listaEmpleados!=NULL && controller_saveAsBinary("src/datab.csv", listaEmpleados)==0)
+					{
+						printf("\nLa lista fue guardada en binario exitosamente...\n");
+					}
+					else
+					{
+						printf("\nError al guardar la lista en binario...\n");
+					}
+				}
+				else
+				{
+					printf("\nLa lista de empleados no fue cargada previamente...\n");
+				}
+				system("pause");
+				break;
+            case 10:
+            	if(verify("\nDesea salir del programa? ('s'): ")==0)
+            	{
+            		if(listaEmpleados!=NULL)
+            		{
+            			ll_deleteLinkedList(listaEmpleados);
+            		}
+            		printf("\nSaliendo del programa...\n");
+            	}
+            	break;
+        }
+    }while(opcion != 10);
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

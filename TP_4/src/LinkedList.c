@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../inc/LinkedList.h"
+#include "LinkedList.h"
 
 
 static Node* getNode(LinkedList* this, int nodeIndex);
@@ -61,7 +61,7 @@ static Node* getNode(LinkedList* this, int nodeIndex)
 {
 	if(this!=NULL)
 	{
-		struct Node* auxP=this->pFirstNode;
+		Node* auxP=this->pFirstNode;
 		int tam = ll_len(this);
 
 		if(nodeIndex>-1 && nodeIndex<tam)
@@ -105,7 +105,7 @@ static int addNode(LinkedList* this, int nodeIndex,void* pElement)
 
 	if(this!=NULL)
 	{
-		struct Node* pNode=(struct Node*)malloc(sizeof(struct Node));
+		Node* pNode=(Node*)malloc(sizeof(Node));
 		pNode->pElement=pElement;
 
 		int tam = ll_len(this);
@@ -115,19 +115,20 @@ static int addNode(LinkedList* this, int nodeIndex,void* pElement)
 		{
 			if(nodeIndex!=0)
 			{
-				Node* auxP=NULL;
+				Node* auxAnterior=NULL;
+				Node* auxSiguiente=NULL;
 
-				auxP=getNode(this, nodeIndex-1);
+				auxAnterior=getNode(this, nodeIndex-1);
 
-				if(auxP!=NULL)
+				if(auxAnterior!=NULL)
 				{
-					auxP->pNextNode=pNode;
+					auxAnterior->pNextNode=pNode;
 				}
-				auxP=getNode(this, nodeIndex+1);
+				auxSiguiente=getNode(this, nodeIndex+1);
 
-				if(auxP!=NULL)
+				if(auxSiguiente!=NULL)
 				{
-					pNode->pNextNode=auxP;
+					pNode->pNextNode=auxSiguiente;
 				}
 			}
 			else
@@ -193,7 +194,7 @@ void* ll_get(LinkedList* this, int index)
 	if(this!=NULL)
 	{
 		int tam = ll_len(this);
-		struct Node* auxP=this->pFirstNode;
+		Node* auxP=this->pFirstNode;
 
 		if(index>-1 && index<tam)
 		{
@@ -248,12 +249,12 @@ int ll_remove(LinkedList* this,int index)
     if(this!=NULL)
     {
 		int tam = ll_len(this);
-		struct Node* auxP=this->pFirstNode;
+		Node* auxP=this->pFirstNode;
 
 		if(index>-1 && index<tam)
 		{
 			auxP=getNode(this, index);
-			struct Node* next=auxP->pNextNode;
+			Node* next=auxP->pNextNode;
 			if(index>0)
 			{
 				struct Node* prev=getNode(this, index-1);
@@ -548,7 +549,6 @@ LinkedList* ll_clone(LinkedList* this)
     {
     	int tam=ll_len(this);
     	cloneArray=ll_subList(this, 0, tam);
-    	cloneArray=this;
     }
     return cloneArray;
 }
