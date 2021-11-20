@@ -281,11 +281,6 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
 		}
 		printLine("");
 
-		if(empleado!=NULL)
-		{
-			free(empleado);
-			empleado=NULL;
-		}
 		return 0;
 	}
     return 1;

@@ -53,7 +53,7 @@ int main()
             case 1:
             	if(flagListaCargada==0)
             	{
-                    if(listaEmpleados!=NULL && controller_loadFromText("src/data.csv",listaEmpleados)==0)
+                    if(listaEmpleados!=NULL && controller_loadFromText("src//data.csv",listaEmpleados)==0)
                     {
                     	printf("\nSe han cargado los datos exitosamente...\n");
                     	ultimoIdIngresado=ll_getLastId(listaEmpleados);
@@ -73,7 +73,7 @@ int main()
             case 2:
             	if(flagListaCargada==0)
             	{
-                    if(listaEmpleados!=NULL && controller_loadFromBinary("src/datab.csv",listaEmpleados)==0)
+                    if(listaEmpleados!=NULL && controller_loadFromBinary("src//datab.csv",listaEmpleados)==0)
                     {
                     	printf("\nSe han cargado los datos exitosamente...\n");
                     	ultimoIdIngresado=ll_getLastId(listaEmpleados);
@@ -185,7 +185,7 @@ int main()
             case 8:
 				if(flagListaCargada==1)
 				{
-					if(listaEmpleados!=NULL && controller_saveAsText("src/data.csv", listaEmpleados)==0)
+					if(listaEmpleados!=NULL && controller_saveAsText("src//data.csv", listaEmpleados)==0)
 					{
 						printf("\nLa lista fue guardada en texto exitosamente...\n");
 					}
@@ -203,7 +203,7 @@ int main()
             case 9:
 				if(flagListaCargada==1)
 				{
-					if(listaEmpleados!=NULL && controller_saveAsBinary("src/datab.csv", listaEmpleados)==0)
+					if(listaEmpleados!=NULL && controller_saveAsBinary("src//datab.csv", listaEmpleados)==0)
 					{
 						printf("\nLa lista fue guardada en binario exitosamente...\n");
 					}
